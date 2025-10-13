@@ -54,6 +54,7 @@ This project creates an intelligent assistant that can answer data protection qu
 
 ## 📁 Project Structure
 
+```
 gdpr_compliance_assistant/
 ├── notebooks/ # Jupyter notebooks for development
 ├── data/
@@ -62,6 +63,7 @@ gdpr_compliance_assistant/
 ├── src/ # Source code for the application
 ├── tests/ # Test files
 └── docs/ # Documentation
+```
 
 ## 🎯 Key Features
 
