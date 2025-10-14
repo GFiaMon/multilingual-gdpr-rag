@@ -47,7 +47,7 @@ This project creates an intelligent assistant that can answer data protection qu
 
 - **Framework**: LangChain
 - **Vector Database**: Pinecone
-- **Embeddings**: Sentence Transformers (multilingual)
+- **Embeddings**: "text-embedding-3-small" Sentence Transformers (multilingual)
 - **Language Model**: OpenAI GPT / Hugging Face models
 - **Web Interface**: Streamlit
 - **Language Support**: German & English
