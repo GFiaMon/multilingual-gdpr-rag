@@ -12,11 +12,16 @@ This project creates an intelligent assistant that can answer data protection qu
 
 ### Data Sources
 
-**Primary Dataset**: 
-- **ZDH Data Protection Guide for Crafts Businesses** ([Download PDF](https://www.zdh.de/ueber-uns/fachbereich-organisation-und-recht/datenschutz/datenschutz-fuer-handwerksbetriebe/))
-- **Description**: Comprehensive GDPR guidelines specifically designed for craftspeople and small businesses in Germany. Covers practical implementation of data protection rules with sector-specific examples and recommendations.
+**Primary Datasets**:
 
-**Author**: Dr. Markus Peifer, Head of Organization and Law Department, ZDH (Zentralverband des Deutschen Handwerks - Central Association of German Skilled Trades)
+1. **ZDH Data Protection Guide for Crafts Businesses** ([Download PDF](https://www.zdh.de/ueber-uns/fachbereich-organisation-und-recht/datenschutz/datenschutz-fuer-handwerksbetriebe/))
+   - **Description**: Comprehensive GDPR guidelines specifically designed for craftspeople and small businesses in Germany. Covers practical implementation of data protection rules with sector-specific examples and recommendations.
+   - **Author**: Dr. Markus Peifer, Head of Organization and Law Department, ZDH (Zentralverband des Deutschen Handwerks - Central Association of German Skilled Trades)
+
+2. **BITKOM AI & Data Protection - Practical Guide 2.0** ([Download PDF](https://www.bitkom.org/Bitkom/Publikationen/KI-Datenschutz-Praxisleitfaden))
+   - **Description**: The second edition of the "AI & Data Protection" practical guide serves as a comprehensive reference for companies and organizations that want to use and implement AI technologies in compliance with data protection regulations. It provides practical instructions, legal foundations, and concrete tools to ensure that the processing of personal data is in line with GDPR and other relevant regulations.
+   - **Key Features**: Contains definitions, instructions, and practice-oriented checklists. Specifically addresses data protection requirements and ethical questions when using AI systems. Includes detailed examples and implementation tips for data protection-compliant AI implementation.
+   - **Organization**: BITKOM is Germany's most important digital association and largest European think tank for digital topics, with over 2,200 member companies including SMEs, tech startups, and DAX corporations.
 
 **Key Topics Covered**:
 - Basic data protection principles for small businesses
@@ -25,23 +30,25 @@ This project creates an intelligent assistant that can answer data protection qu
 - Data retention periods
 - Marketing and consent rules
 - Data breach procedures
+- AI-specific data protection requirements
+- Ethical AI implementation
 - Practical implementation guidance
 
 ## 🚀 Project Roadmap
 
 ### Phase 1: Proof of Concept (POC)
 - **POC 1** ✅: Ask questions in German, receive answers in German
-- **POC 2** 🔄: Ask questions in English or German, receive answers in the same language
+- **POC 2** ✅: Ask questions in English or German, receive answers in the same language
 
 ### Phase 2: Minimum Viable Product (MVP)
-- **MVP 1** 🎯: Web interface with chatbot functionality
-- **MVP 2** 📚: Enhanced knowledge base with AI & Data Protection guidelines
+- **MVP 1** ✅: **Web interface with chatbot functionality** - Live at: `www.[fill later]`
+- **MVP 2** ✅: **Enhanced knowledge base with AI & Data Protection guidelines** - BITKOM guide integrated
 
 ### Future Enhancements
-- **Additional Dataset**: BITKOM "AI & Data Protection" Practical Guide ([View Details](https://www.bitkom.org/Bitkom/Publikationen/KI-Datenschutz-Praxisleitfaden))
 - Multi-document search and comparison
 - Conversation memory and follow-up questions
-- Deployment as a web service
+- Enhanced deployment as a web service
+- Additional specialized guidelines
 
 ## 🛠️ Technical Stack
 
@@ -57,9 +64,13 @@ This project creates an intelligent assistant that can answer data protection qu
 ```
 gdpr_compliance_assistant/
 ├── notebooks/ # Jupyter notebooks for development
+│   ├── 01_pdf_processing.ipynb    # Process PDF → chunks
+│   ├── 02_pinecone_upload.ipynb   # Upload to Pinecone (run once)
+│   └── 03_rag_agent.ipynb         # Build RAG (uses existing index)
+│   └── 04_pinecone_upload_new_documents.ipynb         # Process (modular) PDF → chunks → Pinecone.
 ├── data/
-│ ├── raw/ # Original PDF documents
-│ └── processed/ # Processed chunks and vector database
+│   ├── raw/ # Original PDF documents
+│   └── processed/ # Processed chunks and vector database
 ├── src/ # Source code for the application
 ├── tests/ # Test files
 └── docs/ # Documentation
@@ -68,7 +79,9 @@ gdpr_compliance_assistant/
 ## 🎯 Key Features
 
 - **Multilingual Support**: Questions and answers in German and English
-- **Context-Aware Answers**: Based on official craftspeople guidelines
+- **Context-Aware Answers**: Based on official craftspeople and AI guidelines
+- **Live Web Interface**: Accessible via Streamlit deployment
+- **Dual Knowledge Base**: Combines traditional GDPR and AI-specific data protection
 
 ## 📊 Data Processing
 
@@ -77,6 +90,17 @@ The system processes PDF documents through:
 2. **Intelligent Chunking**: Semantic splitting with meaningful metadata
 3. **Multilingual Embeddings**: Vector representations for semantic search
 4. **RAG Pipeline**: Combines retrieval with generative AI
+
+## 🌐 Live Demo
+
+The MVP is now live and accessible at: `www.[fill later]`
+
+**Current Features**:
+- Interactive chatbot interface
+- Support for both English and German queries
+- Answers based on ZDH crafts business guidelines
+- Additional AI data protection knowledge from BITKOM
+- Real-time response generation
 
 ## 🤝 Contributing
 
@@ -96,10 +120,7 @@ For questions about this project or suggestions for improvement, please open an 
 
 ---
 
-**Built with ❤️ for craftspeople navigating data protection regulations**
+**Built with ❤️ for craftspeople and other bussiness navigating data protection regulations in Germany**
 
 
 ------------------
-
-
-

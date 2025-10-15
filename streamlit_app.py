@@ -73,8 +73,14 @@ for message in st.session_state.messages:
         if message["role"] == "assistant" and message.get("sources"):
             with st.expander("📚 Source Documents"):
                 for i, source in enumerate(message["sources"]):
-                    st.markdown(f"**Source {i+1}:**")
-                    st.markdown(f"{source['content'][:200]}...")
+                    doc_name = source.get("document") or (source.get("metadata", {}) or {}).get("document_name")
+                    page_num = source.get("page") or (source.get("metadata", {}) or {}).get("page_number") or (source.get("metadata", {}) or {}).get("page")
+                    header = f"**Source {i+1}:** {doc_name or 'Unknown document'}"
+                    if page_num is not None:
+                        header += f" — page {page_num}"
+                    st.markdown(header)
+                    # Preserve original line breaks in normal font
+                    st.markdown((source.get('content', '') or '').replace('\n', '  \n'))
                     st.markdown("---")
 
 
@@ -103,8 +109,14 @@ if prompt := st.chat_input("Ask about GDPR compliance..."):
         if response["sources"]:
             with st.expander(f"📚 Source Documents ({len(response['sources'])})"):
                 for i, source in enumerate(response["sources"]):
-                    st.markdown(f"**Source {i+1}:**")
-                    st.markdown(f"{source['content'][:300]}...")
+                    doc_name = source.get("document") or (source.get("metadata", {}) or {}).get("document_name")
+                    page_num = source.get("page") or (source.get("metadata", {}) or {}).get("page_number") or (source.get("metadata", {}) or {}).get("page")
+                    header = f"**Source {i+1}:** {doc_name or 'Unknown document'}"
+                    if page_num is not None:
+                        header += f" — page {page_num}"
+                    st.markdown(header)
+                    # Preserve original line breaks in normal font
+                    st.markdown((source.get('content', '') or '').replace('\n', '  \n'))
                     st.markdown("---")
     
     # Add assistant response to chat history

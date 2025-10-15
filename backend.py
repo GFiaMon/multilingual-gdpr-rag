@@ -171,7 +171,7 @@ def create_qa_chain():
     )
     
     # English prompt template
-    prompt_template_en = """You are a privacy assistant specialized in GDPR for small craft businesses. 
+    prompt_template_en = """You are a privacy assistant specialized in GDPR, 'AI & Data Protection' for small german businesses. 
 Explain in a clear, practical, and easy-to-understand way based on the following context. 
 This is not legal advice. If the context does not contain the answer, say so openly.
 
@@ -224,10 +224,22 @@ def ask_gdpr_question(question, show_sources=True):
     # Extract sources if requested
     if show_sources and result.get('source_documents'):
         for doc in result['source_documents']:
-            source_text = doc.page_content.replace('\n', ' ').strip()
+            # Preserve original formatting (newlines) from the indexed content
+            source_text = doc.page_content.strip()
+            metadata = doc.metadata or {}
+            raw_page = metadata.get('page_number')  # or metadata.get('page')
+            # Normalize page to an integer if possible
+            page = None
+            if raw_page is not None:
+                page = int(float(raw_page))
+            else:
+                page = raw_page
+            document_name = metadata.get('document_name') # or metadata.get('source') or metadata.get('file_name')
             response["sources"].append({
                 "content": source_text,
-                "metadata": doc.metadata
+                "page": page,
+                "document": document_name,
+                "metadata": metadata
             })
     
     return response
