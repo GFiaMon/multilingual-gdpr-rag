@@ -1,7 +1,10 @@
 import streamlit as st
+import streamlit.components.v1 as components
 from dotenv import load_dotenv
 import os
 import time
+import json
+import html
 
 # Load environment variables
 load_dotenv()
@@ -118,6 +121,49 @@ messages = st.session_state.chats[st.session_state.current_chat]
 for msg in messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
+        # Copy-to-clipboard for assistant messages (includes sources if available)
+        if msg["role"] == "assistant":
+            _answer_text = (msg.get("content") or "")
+            _sources = msg.get("sources") or []
+            if _sources:
+                _sources_lines = []
+                for i, source in enumerate(_sources):
+                    _doc_name = source.get("document") or (source.get("metadata", {}) or {}).get("document_name")
+                    _page_num = source.get("page") or (source.get("metadata", {}) or {}).get("page_number") or (source.get("metadata", {}) or {}).get("page")
+                    _header = f"[{i+1}] {(_doc_name or 'Unknown document')}" + (f" — page {_page_num}" if _page_num is not None else "")
+                    _body = (source.get('content', '') or '')
+                    _sources_lines.append(f"{_header}\n{_body}")
+                _copy_plain = _answer_text + "\n\nSources:\n" + "\n\n".join(_sources_lines)
+            else:
+                _copy_plain = _answer_text
+            _suffix = str(int(time.time() * 1000))
+            _escaped_html = html.escape(_copy_plain)
+            components.html(
+                """
+                <div style=\"display:flex; justify-content:flex-end; margin: 4px 0;\">
+                  <button id=\"copy-btn-""" + _suffix + """\" style=\"font-size:12px; padding:4px 8px; cursor:pointer;\">📋 Copy</button>
+                </div>
+                <textarea id=\"copy-text-""" + _suffix + """\" style=\"position:absolute; left:-10000px; top:-10000px; white-space:pre;\">""" + _escaped_html + """</textarea>
+                <script>
+                (function(){
+                  var btn = document.getElementById('copy-btn-""" + _suffix + """');
+                  var txt = document.getElementById('copy-text-""" + _suffix + """');
+                  if(btn && txt){
+                    btn.addEventListener('click', async function(){
+                      try{
+                        await navigator.clipboard.writeText(txt.value);
+                        btn.textContent = '✅ Copied';
+                        setTimeout(function(){ btn.textContent = '📋 Copy'; }, 1200);
+                      }catch(e){
+                        btn.textContent = '⚠️ Failed';
+                      }
+                    });
+                  }
+                })();
+                </script>
+                """,
+                height=50,
+            )
         # Show sources for assistant messages
         if msg["role"] == "assistant" and msg.get("sources"):
             with st.expander("📚 Source Documents"):
@@ -153,6 +199,49 @@ if prompt := st.chat_input("Ask about GDPR compliance..."):
         # Display answer
         thinking_placeholder.markdown(response["answer"])
         
+        # Copy-to-clipboard button for the latest assistant answer (includes sources if available)
+        _latest_answer = response.get("answer") or ""
+        _latest_sources = response.get("sources") or []
+        if _latest_sources:
+            _latest_sources_lines = []
+            for i, source in enumerate(_latest_sources):
+                _doc_name = source.get("document") or (source.get("metadata", {}) or {}).get("document_name")
+                _page_num = source.get("page") or (source.get("metadata", {}) or {}).get("page_number") or (source.get("metadata", {}) or {}).get("page")
+                _header = f"[{i+1}] {(_doc_name or 'Unknown document')}" + (f" — page {_page_num}" if _page_num is not None else "")
+                _body = (source.get('content', '') or '')
+                _latest_sources_lines.append(f"{_header}\n{_body}")
+            _copy_latest_plain = _latest_answer + "\n\nSources:\n" + "\n\n".join(_latest_sources_lines)
+        else:
+            _copy_latest_plain = _latest_answer
+        _suffix2 = str(int(time.time() * 1000))
+        _escaped_html_resp = html.escape(_copy_latest_plain)
+        components.html(
+            """
+            <div style=\"display:flex; justify-content:flex-end; margin: 4px 0;\">
+              <button id=\"copy-btn-""" + _suffix2 + """\" style=\"font-size:12px; padding:4px 8px; cursor:pointer;\">📋 Copy</button>
+            </div>
+            <textarea id=\"copy-text-""" + _suffix2 + """\" style=\"position:absolute; left:-10000px; top:-10000px; white-space:pre;\">""" + _escaped_html_resp + """</textarea>
+            <script>
+            (function(){
+              var btn = document.getElementById('copy-btn-""" + _suffix2 + """');
+              var txt = document.getElementById('copy-text-""" + _suffix2 + """');
+              if(btn && txt){
+                btn.addEventListener('click', async function(){
+                  try{
+                    await navigator.clipboard.writeText(txt.value);
+                    btn.textContent = '✅ Copied';
+                    setTimeout(function(){ btn.textContent = '📋 Copy'; }, 1200);
+                  }catch(e){
+                    btn.textContent = '⚠️ Failed';
+                  }
+                });
+              }
+            })();
+            </script>
+            """,
+            height=50,
+        )
+
         # Display sources in expander
         if response["sources"]:
             with st.expander(f"📚 Source Documents ({len(response['sources'])})"):
