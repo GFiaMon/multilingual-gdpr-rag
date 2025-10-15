@@ -25,7 +25,7 @@ st.title("🛡️ GDPR Compliance Assistant")
 # st.markdown("Ask questions about data protection for craftspeople and small businesses.")
 
 st.markdown("""
-Welcome to your multilingual GDPR & AI compliance assistant for Germany! This tool helps craftspeople
+Welcome to your multilingual GDPR & AI compliance assistant for **Germany**! This tool helps craftspeople
 and small businesses understand data protection requirements for both traditional operations 
 and AI systems in a practical, easy-to-understand way.
 
@@ -36,24 +36,28 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.markdown("""
-    - Data processing principles
-    - Employee data management  
+    - GDPR compliance for crafts businesses
+    - AI data protection requirements
     - Customer data handling
     """)
 
 with col2:
     st.markdown("""
-    - Data retention periods
-    - Surveillance and monitoring
+    - Employee data management
+    - Data retention periods  
     - Data breach procedures
     """)
+
+st.markdown("""
+**💡 Note:** Answers are provided in the language you ask, but source documents remain in their original German.
+""")
 
 # Disclaimer Expander
 with st.expander("ℹ️ Important Disclaimer", expanded=False):
     st.markdown("""
     ⚠️ **This is not legal advice**
     
-    This assistant provides general guidance based on official GDPR documentation for craftspeople, 
+    This assistant provides general guidance based on official ZDH and BITKOM documentation, 
     but it does not constitute legal advice. For specific legal questions or complex situations, 
     please consult with qualified legal professionals or your local trade organizations 
     (Handwerkskammern, Innungen, Fachverbände).
