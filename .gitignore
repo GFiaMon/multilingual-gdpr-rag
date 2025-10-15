@@ -42,8 +42,10 @@ env/
 
 # Streamlit
 # Ignore all by default, but commit config.toml (not secrets.toml)
-.streamlit/
-!.streamlit/config.toml
+
+# .streamlit/
+# !.streamlit/config.toml
+.streamlit/secrets.toml
 
 # OS generated files
 .DS_Store
