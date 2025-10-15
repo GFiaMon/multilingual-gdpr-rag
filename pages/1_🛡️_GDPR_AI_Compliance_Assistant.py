@@ -11,7 +11,7 @@ from utils import export_chat
 # Load environment variables
 load_dotenv()
 
-from backend import ask_gdpr_question
+from backend import ask_gdpr_question, ask_gdpr_question_with_memory, clear_memory, get_memory_state
 
 # Set page config
 st.set_page_config(
@@ -118,14 +118,28 @@ with st.sidebar:
             st.session_state.current_chat = remaining_names[0]
             st.rerun()
 
+    # Memory controls
+    st.markdown("---")
+    st.markdown("**🧠 Memory Controls**")
+    
+    # Show memory state
+    memory_state = get_memory_state()
+    st.caption(f"Memory: {memory_state['message_count']} messages")
+    
+    # Clear memory button
+    if st.button("🧹 Clear Memory", use_container_width=True):
+        clear_memory()
+        st.success("Memory cleared!")
+        st.rerun()
+    
     # Export current chat download
     current_chat_name = st.session_state.current_chat
     export_bytes, export_filename = export_chat(
         current_chat_name,
         st.session_state.chats[current_chat_name],
-        project_description="GDPR Compliance Assistant - Chat export",
-        author="Guillermo",
-        url="https://github.com/guillermo/your-repo",
+        project_description="GDPR & AI Compliance Assistant - Chat export",
+        author="Guillermo Fiallo-Montero",
+        url="https://github.com/GFiaMon/multilingual-gdpr-rag",
     )
     st.download_button(
         label="⬇️ Download chat TXT",
@@ -216,8 +230,15 @@ if prompt := st.chat_input("Ask about GDPR compliance..."):
         thinking_placeholder.markdown("🤔 Thinking...")
         
         # Get response from backend
-        response = ask_gdpr_question(prompt, show_sources=True)
         
+        # # To use memory version, simply change this line in your app:
+        # # FROM (no memory):
+        # response = ask_gdpr_question(prompt, show_sources=True)
+
+        # # TO (with memory):
+        response = ask_gdpr_question_with_memory(prompt, show_sources=True)
+
+
         # Display answer
         thinking_placeholder.markdown(response["answer"])
         
