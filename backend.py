@@ -23,28 +23,28 @@ from langchain.chains import ConversationalRetrievalChain
 # # ---------------------------
 def setup_environment():
     """
-    Get API keys from Streamlit secrets
+    Get API keys from Streamlit secrets or environment variables
     """
-    try:
-        OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-        PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
-        index_name = "gdpr-compliance-openai"
-        
-        print("✅ Environment setup from Streamlit secrets")
-        return index_name, OPENAI_API_KEY, PINECONE_API_KEY
-        
-    except Exception as e:
-        print(f"❌ Error loading secrets: {e}")
-        # Fallback for local development
-        OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-        PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-        index_name = "gdpr-compliance-openai"
-        
-        if OPENAI_API_KEY and PINECONE_API_KEY:
-            print("✅ Environment setup from local environment variables")
+    # Try Streamlit secrets first
+    if hasattr(st, 'secrets') and st.secrets:
+        if "OPENAI_API_KEY" in st.secrets and "PINECONE_API_KEY" in st.secrets:
+            OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+            PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
+            index_name = "gdpr-compliance-openai"
+            print("✅ Environment setup from Streamlit secrets")
             return index_name, OPENAI_API_KEY, PINECONE_API_KEY
-        else:
-            raise Exception("Please set OPENAI_API_KEY and PINECONE_API_KEY in Streamlit secrets or environment variables")
+    
+    # Fallback to environment variables
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+    index_name = "gdpr-compliance-openai"
+    
+    if OPENAI_API_KEY and PINECONE_API_KEY:
+        print("✅ Environment setup from environment variables")
+        return index_name, OPENAI_API_KEY, PINECONE_API_KEY
+    else:
+        print("❌ API keys not found in secrets or environment variables")
+        return None, None, None
 
 # Initialize environment
 index_name, OPENAI_API_KEY, PINECONE_API_KEY = setup_environment()
@@ -86,7 +86,6 @@ def init_pinecone(api_key: str, index_name: str = "gdpr-compliance-openai", envi
     
     # Initialize Pinecone (Current API)
     print("🔌 Initializing Pinecone...")
-    # from pinecone import Pinecone, ServerlessSpec
     pc = Pinecone(api_key=api_key)
     print("✅ Pinecone initialized successfully")
     
@@ -96,7 +95,6 @@ def init_pinecone(api_key: str, index_name: str = "gdpr-compliance-openai", envi
         # Wait for index to be ready
         while not pc.describe_index(index_name).status.ready:
             print("⏳ Waiting for index to be ready...")
-            # import time
             time.sleep(1)
     else:
         print(f"⚠️  Index '{index_name}' not found.")
@@ -112,6 +110,9 @@ def init_embeddings():
     """
     Initialize OpenAI embeddings
     """
+    if not OPENAI_API_KEY:
+        raise ValueError("OPENAI_API_KEY is missing!")
+    
     print("🔤 Initializing embeddings...")
     embeddings = OpenAIEmbeddings(
         model="text-embedding-3-small",
@@ -127,6 +128,9 @@ def init_vector_store():
     """
     Initialize the vector store connection
     """
+    if not PINECONE_API_KEY:
+        raise ValueError("PINECONE_API_KEY is missing!")
+    
     print("🔄 Connecting to vector store...")
     pc, index = init_pinecone(PINECONE_API_KEY)
     embeddings = init_embeddings()
@@ -146,6 +150,9 @@ def init_llm():
     """
     Initialize the LLM
     """
+    if not OPENAI_API_KEY:
+        raise ValueError("OPENAI_API_KEY is missing!")
+    
     print("🧠 Initializing LLM...")
     
     llm = ChatOpenAI(
@@ -271,6 +278,14 @@ def ask_gdpr_question_with_memory(question, show_sources=True):
     """
     global qa_chain_memory, memory_instance
     
+    # Check if API keys are available
+    if not OPENAI_API_KEY or not PINECONE_API_KEY:
+        return {
+            "answer": "❌ API keys not configured. Please set OPENAI_API_KEY and PINECONE_API_KEY in Streamlit secrets.",
+            "sources": [],
+            "memory_count": 0
+        }
+    
     # Initialize chain and memory if not already done
     if qa_chain_memory is None or memory_instance is None:
         qa_chain_memory, memory_instance = create_qa_chain_with_memory()
@@ -334,6 +349,13 @@ def ask_gdpr_question(question, show_sources=True):
     """
     Ask a question and return answer with sources
     """
+    # Check if API keys are available
+    if not OPENAI_API_KEY or not PINECONE_API_KEY:
+        return {
+            "answer": "❌ API keys not configured. Please set OPENAI_API_KEY and PINECONE_API_KEY in Streamlit secrets.",
+            "sources": []
+        }
+    
     if "qa_chain" not in ask_gdpr_question.__dict__:
         ask_gdpr_question.qa_chain = create_qa_chain()
     

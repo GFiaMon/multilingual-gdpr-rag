@@ -134,20 +134,23 @@ with st.sidebar:
     
     # Export current chat download
     current_chat_name = st.session_state.current_chat
-    export_bytes, export_filename = export_chat(
-        current_chat_name,
-        st.session_state.chats[current_chat_name],
-        project_description="GDPR & AI Compliance Assistant - Chat export",
-        author="Guillermo Fiallo-Montero",
-        url="https://github.com/GFiaMon/multilingual-gdpr-rag",
-    )
-    st.download_button(
-        label="⬇️ Download chat TXT",
-        data=export_bytes,
-        file_name=export_filename,
-        mime="text/plain",
-        use_container_width=True,
-    )
+    if st.session_state.chats[current_chat_name]:  # Only show download if there are messages
+        export_bytes, export_filename = export_chat(
+            current_chat_name,
+            st.session_state.chats[current_chat_name],
+            project_description="GDPR & AI Compliance Assistant - Chat export",
+            author="Guillermo Fiallo-Montero",
+            url="https://github.com/GFiaMon/multilingual-gdpr-rag",
+        )
+        st.download_button(
+            label="⬇️ Download chat TXT",
+            data=export_bytes,
+            file_name=export_filename,
+            mime="text/plain",
+            use_container_width=True,
+        )
+    else:
+        st.caption("No messages to export")
     # Now instantiate the selectbox bound to the updated session state
     selected_chat = st.selectbox("Select a chat", chat_names, key="current_chat")
 
