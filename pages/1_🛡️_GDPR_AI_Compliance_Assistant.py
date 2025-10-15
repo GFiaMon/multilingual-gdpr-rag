@@ -5,6 +5,8 @@ import os
 import time
 import json
 import html
+from datetime import datetime
+from utils import export_chat
 
 # Load environment variables
 load_dotenv()
@@ -111,6 +113,23 @@ with st.sidebar:
             remaining_names = list(st.session_state.chats.keys())
             st.session_state.current_chat = remaining_names[0]
             st.rerun()
+
+    # Export current chat download
+    current_chat_name = st.session_state.current_chat
+    export_bytes, export_filename = export_chat(
+        current_chat_name,
+        st.session_state.chats[current_chat_name],
+        project_description="GDPR Compliance Assistant - Chat export",
+        author="Guillermo",
+        url="https://github.com/guillermo/your-repo",
+    )
+    st.download_button(
+        label="⬇️ Download chat TXT",
+        data=export_bytes,
+        file_name=export_filename,
+        mime="text/plain",
+        use_container_width=True,
+    )
     # Now instantiate the selectbox bound to the updated session state
     selected_chat = st.selectbox("Select a chat", chat_names, key="current_chat")
 
@@ -180,8 +199,7 @@ for msg in messages:
 # Chat input
 if prompt := st.chat_input("Ask about GDPR compliance..."):
     # Add user message to chat history
-    # st.session_state.messages.append({"role": "user", "content": prompt}) #< working code
-    messages.append({"role": "user", "content": prompt})        #new exp code
+    messages.append({"role": "user", "content": prompt, "timestamp": datetime.utcnow().isoformat(timespec="seconds") + "Z"})
     
     # Display user message
     with st.chat_message("user"):
@@ -257,11 +275,11 @@ if prompt := st.chat_input("Ask about GDPR compliance..."):
                     st.markdown("---")
     
     # Add assistant response to chat history
-    # st.session_state.messages.append({              #< working code
-    messages.append({              #< new exp code
-        "role": "assistant", 
+    messages.append({
+        "role": "assistant",
         "content": response["answer"],
-        "sources": response["sources"]
+        "sources": response["sources"],
+        "timestamp": datetime.utcnow().isoformat(timespec="seconds") + "Z",
     })
     # Persist back to session state (not strictly necessary but explicit)
     st.session_state.chats[st.session_state.current_chat] = messages
