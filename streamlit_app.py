@@ -9,19 +9,6 @@ load_dotenv()
 
 from backend import ask_gdpr_question
 
-# import sys
-# # Add project root to Python path
-# sys.path.append(os.path.abspath('..'))
-
-# # LangChain components
-# from langchain_openai import OpenAIEmbeddings, ChatOpenAI  # ✅ Correct imports
-# from langchain_pinecone import PineconeVectorStore  # ✅ Pinecone integration
-# from langchain.chains import RetrievalQA
-# from langchain.prompts import PromptTemplate
-
-# from pinecone import Pinecone, ServerlessSpec
-
-
 # Set page config
 st.set_page_config(
     page_title="GDPR Compliance Assistant",
@@ -31,16 +18,51 @@ st.set_page_config(
 
 # Title and description
 st.title("🛡️ GDPR Compliance Assistant")
-st.markdown("Ask questions about data protection for craftspeople and small businesses.")
+# st.markdown("Ask questions about data protection for craftspeople and small businesses.")
+
+st.markdown("""
+Welcome to your multilingual GDPR assistant! This tool helps craftspeople and small businesses 
+understand data protection requirements in a practical, easy-to-understand way.
+
+**Ask questions in English or German** about:
+""")
+# Create two columns for the bullet points
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown("""
+    - Data processing principles
+    - Employee data management  
+    - Customer data handling
+    """)
+
+with col2:
+    st.markdown("""
+    - Data retention periods
+    - Surveillance and monitoring
+    - Data breach procedures
+    """)
+
+# Disclaimer Expander
+with st.expander("ℹ️ Important Disclaimer", expanded=True):
+    st.markdown("""
+    ⚠️ **This is not legal advice**
+    
+    This assistant provides general guidance based on official GDPR documentation for craftspeople, 
+    but it does not constitute legal advice. For specific legal questions or complex situations, 
+    please consult with qualified legal professionals or your local trade organizations 
+    (Handwerkskammern, Innungen, Fachverbände).
+    
+    🔄 **Service Limitations**
+    
+    We appreciate your engagement! Please note, this demo is designed to process a maximum of 
+    10 interactions and may be unavailable if too many people use the service concurrently. 
+    Thank you for your understanding.
+    """)
 
 # Initialize session state for chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
-# # Display chat messages (1st version)
-# for message in st.session_state.messages:
-#     with st.chat_message(message["role"]):
-#         st.markdown(message["content"])
 
 # Display chat messages
 for message in st.session_state.messages:
@@ -91,25 +113,3 @@ if prompt := st.chat_input("Ask about GDPR compliance..."):
         "content": response["answer"],
         "sources": response["sources"]
     })
-
-
-# # Chat input (1st version)
-# if prompt := st.chat_input("Ask about GDPR compliance..."):
-#     # Add user message to chat history
-#     st.session_state.messages.append({"role": "user", "content": prompt})
-#     with st.chat_message("user"):
-#         st.markdown(prompt)
-
-#     # Display assistant response
-#     with st.chat_message("assistant"):
-#         # SIMPLE RESPONSE - Replace this with your actual RAG agent later
-#         placeholder = st.empty()
-#         placeholder.markdown("🤔 Thinking...")
-        
-#         # TODO: Replace this with your actual RAG agent call
-#         response = f"I received your question: '{prompt}'. This is where the RAG agent will answer."
-        
-#         placeholder.markdown(response)
-    
-#     # Add assistant response to chat history
-#     st.session_state.messages.append({"role": "assistant", "content": response})
