@@ -65,8 +65,6 @@ def setup_langsmith():
             # os.environ["LANGSMITH_ENDPOINT"] = st.secrets.get("LANGSMITH_ENDPOINT", "https://eu.api.smith.langchain.com")
             os.environ["LANGSMITH_PROJECT"] = st.secrets.get("LANGSMITH_PROJECT", "GDPR-Compliance-Assistant")
             
-            print("✅ LangSmith tracing configured!")
-            print(f"   Project: {os.environ['LANGSMITH_PROJECT']}")
             return True
     else:
         print("⚠️  LangSmith API key not found - tracing disabled")
@@ -167,51 +165,6 @@ def init_llm():
     )
     return llm
 
-# # ---------------------------
-# # QA Chain Initialization 
-# # ---------------------------
-# def create_qa_chain():
-#     """
-#     Create the QA chain with English prompt
-#     """
-    
-#     vector_store = init_vector_store()
-#     llm = init_llm()
-    
-#     # Create retriever
-#     retriever = vector_store.as_retriever(
-#         search_type="similarity",
-#         search_kwargs={"k": 3}
-#     )
-    
-#     # English prompt template
-#     prompt_template_en = """You are a privacy assistant specialized in GDPR, 'AI & Data Protection' for small german businesses. 
-# Explain in a clear, practical, and easy-to-understand way based on the following context. 
-# This is not legal advice. If the context does not contain the answer, say so openly.
-
-# Context:
-# {context}
-
-# Question:
-# {question}
-
-# Answer (short and practical):"""
-
-#     PROMPT_en = PromptTemplate(
-#         template=prompt_template_en, 
-#         input_variables=["context", "question"]
-#     )
-    
-#     # Create QA chain
-#     qa_chain_en = RetrievalQA.from_chain_type(
-#         llm=llm,
-#         chain_type="stuff",
-#         retriever=retriever,
-#         chain_type_kwargs={"prompt": PROMPT_en},
-#         return_source_documents=True
-#     )
-    
-#     return qa_chain_en
 
 # ---------------------------
 # QA Memory (opt.)  Initialization 
@@ -344,58 +297,7 @@ def get_memory_state():
         }
     return {"message_count": 0, "messages": []}
 
-# # ---------------------------
-# #  Ask a question and return answer
-# # ---------------------------
-# def ask_gdpr_question(question, show_sources=True):
-#     """
-#     Ask a question and return answer with sources
-#     """
-#     # Check if API keys are available
-#     if not OPENAI_API_KEY or not PINECONE_API_KEY:
-#         return {
-#             "answer": "❌ API keys not configured. Please set OPENAI_API_KEY and PINECONE_API_KEY in Streamlit secrets.",
-#             "sources": []
-#         }
-    
-#     if "qa_chain" not in ask_gdpr_question.__dict__:
-#         ask_gdpr_question.qa_chain = create_qa_chain()
-    
-#     # Get answer from QA chain
-#     result = ask_gdpr_question.qa_chain.invoke({"query": question})
-    
-#     # Prepare response
-#     response = {
-#         "answer": result.get('result', '').strip(),
-#         "sources": []
-#     }
-    
-#     # Extract sources if requested
-#     if show_sources and result.get('source_documents'):
-#         for doc in result['source_documents']:
-#             # Preserve original formatting (newlines)
-#             source_text = doc.page_content.strip()
-#             metadata = doc.metadata or {}
-#             raw_page = metadata.get('page_number')
-#             # Normalize page to an integer if possible
-#             page = None
-#             if raw_page is not None:
-#                 page = int(float(raw_page))
-#             else:
-#                 page = raw_page
-#             document_name = metadata.get('document_name')
-#             response["sources"].append({
-#                 "content": source_text,
-#                 "page": page,
-#                 "document": document_name,
-#                 "metadata": metadata
-#             })
-    
-#     return response
 
-# Initialize on import
-# KEEP your existing initialization:
-# qa_chain = create_qa_chain()
 
 # Global variables for memory-based QA chain
 qa_chain_memory = None

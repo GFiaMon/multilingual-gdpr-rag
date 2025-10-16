@@ -25,33 +25,34 @@ st.set_page_config(
 st.title("🛡️ GDPR Compliance Assistant")
 # st.markdown("Ask questions about data protection for craftspeople and small businesses.")
 
-st.markdown("""
-Welcome to your multilingual GDPR & AI compliance assistant for **Germany**! This tool helps craftspeople
-and small businesses understand data protection requirements for both traditional operations 
-and AI systems in a practical, easy-to-understand way.
-
-**Ask questions in English or German** about:
-""")
-# Create two columns for the bullet points
-col1, col2 = st.columns(2)
-
-with col1:
+with st.expander("Hello!", expanded=False):
     st.markdown("""
-    - GDPR compliance for crafts businesses
-    - AI data protection requirements
-    - Customer data handling
-    """)
+    Welcome to your multilingual GDPR & AI compliance assistant for **Germany**! This tool helps craftspeople
+    and small businesses understand data protection requirements for both traditional operations 
+    and AI systems in a practical, easy-to-understand way.
 
-with col2:
-    st.markdown("""
-    - Employee data management
-    - Data retention periods  
-    - Data breach procedures
+    **Ask questions in English or German** (limited testing for other languages) about:
     """)
+    # Create two columns for the bullet points
+    col1, col2 = st.columns(2)
 
-st.markdown("""
-**💡 Note:** Answers are provided in the language you ask, but source documents remain in their original German.
-""")
+    with col1:
+        st.markdown("""
+        📊 GDPR compliance  
+        🤖 AI data protection  
+        👥 Customer data
+        """)
+
+    with col2:
+        st.markdown("""
+        👨‍💼 Employee data  
+        ⏰ Retention periods  
+        🚨 Breach procedures
+        """)
+
+    st.info("""
+    💡 **Tip:** Answers are provided in the language you ask, but source documents remain in their original German.
+    """)
 
 # Disclaimer Expander
 with st.expander("ℹ️ Important Disclaimer", expanded=False):
@@ -156,7 +157,10 @@ with st.sidebar:
     selected_chat = st.selectbox("Select a chat", chat_names, key="current_chat")
 
 # Main area: Display messages for the selected chat
-st.title(f"Chat: {st.session_state.current_chat}")
+# st.title(f"Chat: {st.session_state.current_chat}")
+# st.header(f"{st.session_state.current_chat}")
+st.markdown(f"### {st.session_state.current_chat}")
+
 messages = st.session_state.chats[st.session_state.current_chat]
 
 for msg in messages:
