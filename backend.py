@@ -35,7 +35,6 @@ def setup_environment():
             OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
             PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
             index_name = "gdpr-compliance-openai"
-            print("✅ Environment setup from Streamlit secrets")
             return index_name, OPENAI_API_KEY, PINECONE_API_KEY
     
     # Fallback to environment variables
@@ -44,7 +43,6 @@ def setup_environment():
     index_name = "gdpr-compliance-openai"
     
     if OPENAI_API_KEY and PINECONE_API_KEY:
-        print("✅ Environment setup from environment variables")
         return index_name, OPENAI_API_KEY, PINECONE_API_KEY
     else:
         print("❌ API keys not found in secrets or environment variables")
@@ -61,59 +59,37 @@ def setup_langsmith():
     # Try Streamlit secrets first
     if hasattr(st, 'secrets') and st.secrets:
         if "LANGSMITH_API_KEY" in st.secrets:
-            LANGSMITH_API_KEY = st.secrets["LANGSMITH_API_KEY"]
-            LANGSMITH_PROJECT = st.secrets.get("LANGSMITH_PROJECT", "GDPR-Compliance-Assistant")
-            os.environ["LANGCHAIN_TRACING_V2"] = "true"
-            os.environ["LANGCHAIN_API_KEY"] = LANGSMITH_API_KEY
-            os.environ["LANGCHAIN_PROJECT"] = LANGSMITH_PROJECT
-            print("✅ LangSmith tracing enabled from Streamlit secrets")
+            # Set the EXACT environment variables LangSmith expects
+            os.environ["LANGSMITH_TRACING"] = st.secrets.get("LANGSMITH_TRACING", "true")
+            os.environ["LANGSMITH_API_KEY"] = st.secrets["LANGSMITH_API_KEY"]
+            # os.environ["LANGSMITH_ENDPOINT"] = st.secrets.get("LANGSMITH_ENDPOINT", "https://eu.api.smith.langchain.com")
+            os.environ["LANGSMITH_PROJECT"] = st.secrets.get("LANGSMITH_PROJECT", "GDPR-Compliance-Assistant")
+            
+            print("✅ LangSmith tracing configured!")
+            print(f"   Project: {os.environ['LANGSMITH_PROJECT']}")
             return True
-    
-    # Fallback to environment variables
-    LANGSMITH_API_KEY = os.getenv("LANGSMITH_API_KEY")
-    if LANGSMITH_API_KEY:
-        LANGSMITH_PROJECT = os.getenv("LANGSMITH_PROJECT", "GDPR-Compliance-Assistant")
-        os.environ["LANGCHAIN_TRACING_V2"] = "true"
-        os.environ["LANGCHAIN_API_KEY"] = LANGSMITH_API_KEY
-        os.environ["LANGCHAIN_PROJECT"] = LANGSMITH_PROJECT
-        print("✅ LangSmith tracing enabled from environment variables")
-        return True
     else:
         print("⚠️  LangSmith API key not found - tracing disabled")
         return False
+
+    # # Fallback to environment variables
+    # LANGSMITH_API_KEY = os.getenv("LANGSMITH_API_KEY")
+    # if LANGSMITH_API_KEY:
+    #     LANGSMITH_PROJECT = os.getenv("LANGSMITH_PROJECT", "GDPR-Compliance-Assistant")
+    #     os.environ["LANGCHAIN_TRACING_V2"] = "true"
+    #     os.environ["LANGCHAIN_API_KEY"] = LANGSMITH_API_KEY
+    #     os.environ["LANGCHAIN_PROJECT"] = LANGSMITH_PROJECT
+    #     return True
+    # else:
+    #     print("⚠️  LangSmith API key not found - tracing disabled")
+    #     return False
 
 # Initialize LangSmith
 langsmith_enabled = setup_langsmith()
 # ========== END OF LANGSMITH SETUP ==========
 
-
-# # ---------------------------
-# # Configure your API keys (with .env)
-# # ---------------------------
-# def setup_environment():
-#     # Check if API keys are already in environment
-#     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-#     PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-    
-#     # If not set, prompt user
-#     if not OPENAI_API_KEY:
-#         OPENAI_API_KEY = getpass.getpass("Enter your OpenAI API key: ")
-#         os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
-    
-#     if not PINECONE_API_KEY:
-#         PINECONE_API_KEY = getpass.getpass("Enter your Pinecone API key: ")
-#         os.environ["PINECONE_API_KEY"] = PINECONE_API_KEY
-    
-#     # Your Pinecone index name (replace with your actual index name)
-#     index_name = "gdpr-compliance-openai"  # Change this to your index name
-    
-#     return index_name, OPENAI_API_KEY, PINECONE_API_KEY
-
-# # Initialize environment
-# index_name, OPENAI_API_KEY, PINECONE_API_KEY = setup_environment()
-
 # ---------------------------
-# Pinecone Initialization (Current syntax)
+# Pinecone Initialization
 # ---------------------------
 def init_pinecone(api_key: str, index_name: str = "gdpr-compliance-openai", environment: str = "us-east-1"):
     """
@@ -122,17 +98,13 @@ def init_pinecone(api_key: str, index_name: str = "gdpr-compliance-openai", envi
     if not api_key:
         raise ValueError("PINECONE_API_KEY is missing!")
     
-    # Initialize Pinecone (Current API)
-    print("🔌 Initializing Pinecone...")
+    # Initialize Pinecone
     pc = Pinecone(api_key=api_key)
-    print("✅ Pinecone initialized successfully")
     
     # Check if index exists
     if index_name in pc.list_indexes().names():
-        print(f"✅ Index '{index_name}' exists")
         # Wait for index to be ready
         while not pc.describe_index(index_name).status.ready:
-            print("⏳ Waiting for index to be ready...")
             time.sleep(1)
     else:
         print(f"⚠️  Index '{index_name}' not found.")
@@ -151,12 +123,10 @@ def init_embeddings():
     if not OPENAI_API_KEY:
         raise ValueError("OPENAI_API_KEY is missing!")
     
-    print("🔤 Initializing embeddings...")
     embeddings = OpenAIEmbeddings(
         model="text-embedding-3-small",
         openai_api_key=OPENAI_API_KEY
     )
-    print("✅ Embeddings initialized")
     return embeddings
 
 # ---------------------------
@@ -169,7 +139,6 @@ def init_vector_store():
     if not PINECONE_API_KEY:
         raise ValueError("PINECONE_API_KEY is missing!")
     
-    print("🔄 Connecting to vector store...")
     pc, index = init_pinecone(PINECONE_API_KEY)
     embeddings = init_embeddings()
     
@@ -178,7 +147,6 @@ def init_vector_store():
         embedding=embeddings,
         text_key="text"
     )
-    print("✅ Vector store connected")
     return vector_store
 
 # ---------------------------
@@ -190,16 +158,13 @@ def init_llm():
     """
     if not OPENAI_API_KEY:
         raise ValueError("OPENAI_API_KEY is missing!")
-    
-    print("🧠 Initializing LLM...")
-    
+        
     llm = ChatOpenAI(
         openai_api_key=OPENAI_API_KEY,
         model_name='gpt-3.5-turbo',
         temperature=0.0,
         max_tokens=500,
     )
-    print("✅ LLM initialized")
     return llm
 
 # ---------------------------
@@ -209,7 +174,6 @@ def create_qa_chain():
     """
     Create the QA chain with English prompt
     """
-    print("🔗 Creating QA chain...")
     
     vector_store = init_vector_store()
     llm = init_llm()
@@ -247,7 +211,6 @@ Answer (short and practical):"""
         return_source_documents=True
     )
     
-    print("✅ QA chain created")
     return qa_chain_en
 
 # ---------------------------
@@ -256,7 +219,6 @@ Answer (short and practical):"""
 
 def create_qa_chain_with_memory():
     """Create QA chain with conversation memory"""
-    print("🔗 Creating QA chain with memory...")
     
     vector_store = init_vector_store()
     llm = init_llm()
@@ -301,7 +263,7 @@ Answer (short and practical):"""
         memory=memory,
         combine_docs_chain_kwargs={"prompt": PROMPT_mem},
         return_source_documents=True,
-        verbose=True  # Set to True to see the chain thinking
+        verbose=False  # Set to True to see the chain thinking
     )
     
     return qa_chain_mem, memory
@@ -329,7 +291,10 @@ def ask_gdpr_question_with_memory(question, show_sources=True):
         qa_chain_memory, memory_instance = create_qa_chain_with_memory()
     
     # Get answer from QA chain with memory - NOTE: different input format!
-    result = qa_chain_memory({"question": question})
+    result = qa_chain_memory.invoke({"question": question})
+
+    # Get answer from QA chain
+    # result = ask_gdpr_question.qa_chain.invoke({"query": question})
     
     # Prepare response - NOTE: key changed from 'result' to 'answer'
     response = {
@@ -366,7 +331,6 @@ def clear_memory():
     global memory_instance
     if memory_instance is not None:
         memory_instance.clear()
-        print("🧹 Memory cleared")
 
 def get_memory_state():
     """
@@ -409,17 +373,17 @@ def ask_gdpr_question(question, show_sources=True):
     # Extract sources if requested
     if show_sources and result.get('source_documents'):
         for doc in result['source_documents']:
-            # Preserve original formatting (newlines) from the indexed content
+            # Preserve original formatting (newlines)
             source_text = doc.page_content.strip()
             metadata = doc.metadata or {}
-            raw_page = metadata.get('page_number')  # or metadata.get('page')
+            raw_page = metadata.get('page_number')
             # Normalize page to an integer if possible
             page = None
             if raw_page is not None:
                 page = int(float(raw_page))
             else:
                 page = raw_page
-            document_name = metadata.get('document_name') # or metadata.get('source') or metadata.get('file_name')
+            document_name = metadata.get('document_name')
             response["sources"].append({
                 "content": source_text,
                 "page": page,
