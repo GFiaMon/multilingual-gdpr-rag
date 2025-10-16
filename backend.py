@@ -25,6 +25,10 @@ def setup_environment():
     """
     Get API keys from Streamlit secrets or environment variables
     """
+    # First try environment variables (works everywhere)
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+
     # Try Streamlit secrets first
     if hasattr(st, 'secrets') and st.secrets:
         if "OPENAI_API_KEY" in st.secrets and "PINECONE_API_KEY" in st.secrets:
@@ -48,6 +52,40 @@ def setup_environment():
 
 # Initialize environment
 index_name, OPENAI_API_KEY, PINECONE_API_KEY = setup_environment()
+
+# ========== ADD LANGSMITH SETUP RIGHT HERE ==========
+def setup_langsmith():
+    """
+    Setup LangSmith tracing for observability
+    """
+    # Try Streamlit secrets first
+    if hasattr(st, 'secrets') and st.secrets:
+        if "LANGSMITH_API_KEY" in st.secrets:
+            LANGSMITH_API_KEY = st.secrets["LANGSMITH_API_KEY"]
+            LANGSMITH_PROJECT = st.secrets.get("LANGSMITH_PROJECT", "GDPR-Compliance-Assistant")
+            os.environ["LANGCHAIN_TRACING_V2"] = "true"
+            os.environ["LANGCHAIN_API_KEY"] = LANGSMITH_API_KEY
+            os.environ["LANGCHAIN_PROJECT"] = LANGSMITH_PROJECT
+            print("✅ LangSmith tracing enabled from Streamlit secrets")
+            return True
+    
+    # Fallback to environment variables
+    LANGSMITH_API_KEY = os.getenv("LANGSMITH_API_KEY")
+    if LANGSMITH_API_KEY:
+        LANGSMITH_PROJECT = os.getenv("LANGSMITH_PROJECT", "GDPR-Compliance-Assistant")
+        os.environ["LANGCHAIN_TRACING_V2"] = "true"
+        os.environ["LANGCHAIN_API_KEY"] = LANGSMITH_API_KEY
+        os.environ["LANGCHAIN_PROJECT"] = LANGSMITH_PROJECT
+        print("✅ LangSmith tracing enabled from environment variables")
+        return True
+    else:
+        print("⚠️  LangSmith API key not found - tracing disabled")
+        return False
+
+# Initialize LangSmith
+langsmith_enabled = setup_langsmith()
+# ========== END OF LANGSMITH SETUP ==========
+
 
 # # ---------------------------
 # # Configure your API keys (with .env)
