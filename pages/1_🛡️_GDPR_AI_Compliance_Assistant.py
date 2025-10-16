@@ -11,7 +11,8 @@ from utils import export_chat
 # Load environment variables
 load_dotenv()
 
-from backend import ask_gdpr_question, ask_gdpr_question_with_memory, clear_memory, get_memory_state
+# from backend import ask_gdpr_question, ask_gdpr_question_with_memory, clear_memory, get_memory_state
+from backend import ask_gdpr_question_with_memory, clear_memory, get_memory_state
 
 # Set page config
 st.set_page_config(

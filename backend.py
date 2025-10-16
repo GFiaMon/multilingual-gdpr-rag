@@ -167,51 +167,51 @@ def init_llm():
     )
     return llm
 
-# ---------------------------
-# QA Chain Initialization 
-# ---------------------------
-def create_qa_chain():
-    """
-    Create the QA chain with English prompt
-    """
+# # ---------------------------
+# # QA Chain Initialization 
+# # ---------------------------
+# def create_qa_chain():
+#     """
+#     Create the QA chain with English prompt
+#     """
     
-    vector_store = init_vector_store()
-    llm = init_llm()
+#     vector_store = init_vector_store()
+#     llm = init_llm()
     
-    # Create retriever
-    retriever = vector_store.as_retriever(
-        search_type="similarity",
-        search_kwargs={"k": 3}
-    )
+#     # Create retriever
+#     retriever = vector_store.as_retriever(
+#         search_type="similarity",
+#         search_kwargs={"k": 3}
+#     )
     
-    # English prompt template
-    prompt_template_en = """You are a privacy assistant specialized in GDPR, 'AI & Data Protection' for small german businesses. 
-Explain in a clear, practical, and easy-to-understand way based on the following context. 
-This is not legal advice. If the context does not contain the answer, say so openly.
+#     # English prompt template
+#     prompt_template_en = """You are a privacy assistant specialized in GDPR, 'AI & Data Protection' for small german businesses. 
+# Explain in a clear, practical, and easy-to-understand way based on the following context. 
+# This is not legal advice. If the context does not contain the answer, say so openly.
 
-Context:
-{context}
+# Context:
+# {context}
 
-Question:
-{question}
+# Question:
+# {question}
 
-Answer (short and practical):"""
+# Answer (short and practical):"""
 
-    PROMPT_en = PromptTemplate(
-        template=prompt_template_en, 
-        input_variables=["context", "question"]
-    )
+#     PROMPT_en = PromptTemplate(
+#         template=prompt_template_en, 
+#         input_variables=["context", "question"]
+#     )
     
-    # Create QA chain
-    qa_chain_en = RetrievalQA.from_chain_type(
-        llm=llm,
-        chain_type="stuff",
-        retriever=retriever,
-        chain_type_kwargs={"prompt": PROMPT_en},
-        return_source_documents=True
-    )
+#     # Create QA chain
+#     qa_chain_en = RetrievalQA.from_chain_type(
+#         llm=llm,
+#         chain_type="stuff",
+#         retriever=retriever,
+#         chain_type_kwargs={"prompt": PROMPT_en},
+#         return_source_documents=True
+#     )
     
-    return qa_chain_en
+#     return qa_chain_en
 
 # ---------------------------
 # QA Memory (opt.)  Initialization 
@@ -236,9 +236,9 @@ def create_qa_chain_with_memory():
     )
     
     # Custom prompt template for memory-based conversations
-    prompt_template_mem = """You are a privacy assistant specialized in GDPR for small craft businesses.
+    prompt_template_mem = """You are a compliance assistant specialized in GDPR and AI data protection for German craft businesses, small businesses, and general knowledge for larger enterprises.
 Use the following context and conversation history to answer the question. 
-Explain in a clear, practical way. This is not legal advice. If the context does not contain the answer, say so openly.
+Explain in a clear, practical way. This is not legal advice. If the context does not contain the answer, say so openly and propose a possible alternative question.
 
 Previous conversation:
 {chat_history}
@@ -298,7 +298,7 @@ def ask_gdpr_question_with_memory(question, show_sources=True):
     
     # Prepare response - NOTE: key changed from 'result' to 'answer'
     response = {
-        "answer": result.get('answer', '').strip(),  # Changed key
+        "answer": result.get('answer', '').strip(),
         "sources": [],
         "memory_count": len(memory_instance.chat_memory.messages) // 2
     }
@@ -344,54 +344,54 @@ def get_memory_state():
         }
     return {"message_count": 0, "messages": []}
 
-# ---------------------------
-#  Ask a question and return answer
-# ---------------------------
-def ask_gdpr_question(question, show_sources=True):
-    """
-    Ask a question and return answer with sources
-    """
-    # Check if API keys are available
-    if not OPENAI_API_KEY or not PINECONE_API_KEY:
-        return {
-            "answer": "❌ API keys not configured. Please set OPENAI_API_KEY and PINECONE_API_KEY in Streamlit secrets.",
-            "sources": []
-        }
+# # ---------------------------
+# #  Ask a question and return answer
+# # ---------------------------
+# def ask_gdpr_question(question, show_sources=True):
+#     """
+#     Ask a question and return answer with sources
+#     """
+#     # Check if API keys are available
+#     if not OPENAI_API_KEY or not PINECONE_API_KEY:
+#         return {
+#             "answer": "❌ API keys not configured. Please set OPENAI_API_KEY and PINECONE_API_KEY in Streamlit secrets.",
+#             "sources": []
+#         }
     
-    if "qa_chain" not in ask_gdpr_question.__dict__:
-        ask_gdpr_question.qa_chain = create_qa_chain()
+#     if "qa_chain" not in ask_gdpr_question.__dict__:
+#         ask_gdpr_question.qa_chain = create_qa_chain()
     
-    # Get answer from QA chain
-    result = ask_gdpr_question.qa_chain.invoke({"query": question})
+#     # Get answer from QA chain
+#     result = ask_gdpr_question.qa_chain.invoke({"query": question})
     
-    # Prepare response
-    response = {
-        "answer": result.get('result', '').strip(),
-        "sources": []
-    }
+#     # Prepare response
+#     response = {
+#         "answer": result.get('result', '').strip(),
+#         "sources": []
+#     }
     
-    # Extract sources if requested
-    if show_sources and result.get('source_documents'):
-        for doc in result['source_documents']:
-            # Preserve original formatting (newlines)
-            source_text = doc.page_content.strip()
-            metadata = doc.metadata or {}
-            raw_page = metadata.get('page_number')
-            # Normalize page to an integer if possible
-            page = None
-            if raw_page is not None:
-                page = int(float(raw_page))
-            else:
-                page = raw_page
-            document_name = metadata.get('document_name')
-            response["sources"].append({
-                "content": source_text,
-                "page": page,
-                "document": document_name,
-                "metadata": metadata
-            })
+#     # Extract sources if requested
+#     if show_sources and result.get('source_documents'):
+#         for doc in result['source_documents']:
+#             # Preserve original formatting (newlines)
+#             source_text = doc.page_content.strip()
+#             metadata = doc.metadata or {}
+#             raw_page = metadata.get('page_number')
+#             # Normalize page to an integer if possible
+#             page = None
+#             if raw_page is not None:
+#                 page = int(float(raw_page))
+#             else:
+#                 page = raw_page
+#             document_name = metadata.get('document_name')
+#             response["sources"].append({
+#                 "content": source_text,
+#                 "page": page,
+#                 "document": document_name,
+#                 "metadata": metadata
+#             })
     
-    return response
+#     return response
 
 # Initialize on import
 # KEEP your existing initialization:
