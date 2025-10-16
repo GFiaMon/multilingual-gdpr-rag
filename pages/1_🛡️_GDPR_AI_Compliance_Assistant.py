@@ -13,6 +13,8 @@ load_dotenv()
 
 # from backend import ask_gdpr_question, ask_gdpr_question_with_memory, clear_memory, get_memory_state
 from backend import ask_gdpr_question_with_memory, clear_memory, get_memory_state
+# feedback:
+from backend import submit_feedback_to_langsmith
 
 # Set page config
 st.set_page_config(
@@ -76,26 +78,41 @@ if "chats" not in st.session_state:
     st.session_state.chats = {"Chat 1": []}
 if "current_chat" not in st.session_state:
     st.session_state.current_chat = "Chat 1"
+# Initialize feedback tracking
+if "feedback_given" not in st.session_state:
+    st.session_state.feedback_given = {}
+
+
+
 
 # Sidebar: List chats and create new chat
 with st.sidebar:
     # First, handle new chat creation before instantiating the selectbox
     chat_names = list(st.session_state.chats.keys())
-    # Optional toggle to display chat count
-    if st.toggle("Show chat count", value=False, key="show_chat_count"):
-        st.caption(f"Total chats: {len(chat_names)}")
-    if st.button("New Chat"):
+
+    # === CHANGE 2: Move selectbox to top ===
+    st.subheader("💬 Chat Sessions")                            # <-- Change
+    selected_chat = st.selectbox("Select a chat", chat_names, key="current_chat", label_visibility="collapsed")      # <-- Change   
+
+    
+    if st.button("New Chat", use_container_width=True):
         new_chat_name = f"Chat {len(chat_names) + 1}"
         st.session_state.chats[new_chat_name] = []
         st.session_state.current_chat = new_chat_name
         st.rerun()
+    
+    # Optional toggle to display chat count
+    if st.toggle("Show chat count", value=False, key="show_chat_count"):
+        st.caption(f"Total chats: {len(chat_names)}")
+    
     # Rename current chat before creating the selectbox to avoid mutation-after-instantiation
     proposed_name = st.text_input(
         "Rename current chat",
         value=st.session_state.current_chat,
         key="rename_current_chat_input",
     ).strip()
-    if st.button("Rename"):
+    
+    if st.button("Rename", use_container_width=True):
         old_name = st.session_state.current_chat
         new_name = proposed_name
         if not new_name:
@@ -108,8 +125,9 @@ with st.sidebar:
             st.session_state.chats[new_name] = st.session_state.chats.pop(old_name)
             st.session_state.current_chat = new_name
             st.rerun()
+    
     # Delete current chat with safeguard; do this before selectbox
-    if st.button("🗑️ Delete Chat"):
+    if st.button("🗑️ Delete Chat", use_container_width=True):
         current = st.session_state.current_chat
         if len(st.session_state.chats) <= 1:
             st.warning("Cannot delete the only remaining chat.")
@@ -153,17 +171,21 @@ with st.sidebar:
         )
     else:
         st.caption("No messages to export")
-    # Now instantiate the selectbox bound to the updated session state
-    selected_chat = st.selectbox("Select a chat", chat_names, key="current_chat")
+    
+    # Add your name at the bottom
+    st.caption("---")
+    st.caption("👨‍💻 Developer")
+    st.caption("**Guillermo Fiallo Montero**")
+    # Optional: Add links
+    st.caption("[LinkedIn](https://www.linkedin.com/in/guillermo-fiallo-montero-734a87132/) • [GitHub](https://github.com/GFiaMon)")
 
 # Main area: Display messages for the selected chat
-# st.title(f"Chat: {st.session_state.current_chat}")
-# st.header(f"{st.session_state.current_chat}")
 st.markdown(f"### {st.session_state.current_chat}")
 
 messages = st.session_state.chats[st.session_state.current_chat]
 
-for msg in messages:
+# for msg in messages:
+for idx, msg in enumerate(messages):
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
         # Copy-to-clipboard for assistant messages (includes sources if available)
@@ -209,6 +231,34 @@ for msg in messages:
                 """,
                 height=50,
             )
+
+            # === CHANGE 1: Add feedback buttons for assistant messages ===
+            col_fb1, col_fb2, col_fb3 = st.columns([1, 1, 6])
+            with col_fb1:
+                if st.button("👍", key=f"thumbs_up_{idx}", use_container_width=True):
+                    run_id = msg.get("run_id")
+                    if run_id:
+                        success = submit_feedback_to_langsmith(run_id, 1, "User liked this response")
+                        if success:
+                            st.success("✅ Thanks for your feedback!")
+                        else:
+                            st.error("❌ Failed to submit feedback")
+                    else:
+                        st.warning("⚠️ No run_id available for feedback")
+            with col_fb2:
+                if st.button("👎", key=f"thumbs_down_{idx}", use_container_width=True):
+                    run_id = msg.get("run_id")
+                    if run_id:
+                        success = submit_feedback_to_langsmith(run_id, 0, "User disliked this response")
+                        if success:
+                            st.success("✅ Thanks for your feedback!")
+                        else:
+                            st.error("❌ Failed to submit feedback")
+                    else:
+                        st.warning("⚠️ No run_id available for feedback")
+
+
+
         # Show sources for assistant messages
         if msg["role"] == "assistant" and msg.get("sources"):
             with st.expander("📚 Source Documents"):
@@ -293,6 +343,31 @@ if prompt := st.chat_input("Ask about GDPR compliance..."):
             height=50,
         )
 
+        # === CHANGE 1: Add feedback buttons for the latest response ===
+        col_fb1, col_fb2, col_fb3 = st.columns([1, 1, 6])
+        with col_fb1:
+            if st.button("👍", key="thumbs_up_latest", use_container_width=True):
+                run_id = response.get("run_id")
+                if run_id:
+                    success = submit_feedback_to_langsmith(run_id, 1, "User liked this response")
+                    if success:
+                        st.success("✅ Thanks for your feedback!")
+                    else:
+                        st.error("❌ Failed to submit feedback")
+                else:
+                    st.warning("⚠️ No run_id available for feedback")
+        with col_fb2:
+            if st.button("👎", key="thumbs_down_latest", use_container_width=True):
+                run_id = response.get("run_id")
+                if run_id:
+                    success = submit_feedback_to_langsmith(run_id, 0, "User disliked this response")
+                    if success:
+                        st.success("✅ Thanks for your feedback!")
+                    else:
+                        st.error("❌ Failed to submit feedback")
+                else:
+                    st.warning("⚠️ No run_id available for feedback")
+
         # Display sources in expander
         if response["sources"]:
             with st.expander(f"📚 Source Documents ({len(response['sources'])})"):
@@ -312,6 +387,7 @@ if prompt := st.chat_input("Ask about GDPR compliance..."):
         "role": "assistant",
         "content": response["answer"],
         "sources": response["sources"],
+        "run_id": response.get("run_id"),  # Add this line to store the run_id
         "timestamp": datetime.utcnow().isoformat(timespec="seconds") + "Z",
     })
     # Persist back to session state (not strictly necessary but explicit)

@@ -17,6 +17,16 @@ from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationBufferWindowMemory
 from langchain.chains import ConversationalRetrievalChain
 
+from langsmith import Client
+from langsmith import traceable
+
+# Add this instead:
+from langsmith import run_trees
+
+@st.cache_resource
+def get_langsmith_client():
+    """Initialize LangSmith client once"""
+    return Client()
 
 # # ---------------------------
 # # Configure your API keys (with 'sectrets')
@@ -69,19 +79,6 @@ def setup_langsmith():
     else:
         print("⚠️  LangSmith API key not found - tracing disabled")
         return False
-
-    # # Fallback to environment variables
-    # LANGSMITH_API_KEY = os.getenv("LANGSMITH_API_KEY")
-    # if LANGSMITH_API_KEY:
-    #     LANGSMITH_PROJECT = os.getenv("LANGSMITH_PROJECT", "GDPR-Compliance-Assistant")
-    #     os.environ["LANGCHAIN_TRACING_V2"] = "true"
-    #     os.environ["LANGCHAIN_API_KEY"] = LANGSMITH_API_KEY
-    #     os.environ["LANGCHAIN_PROJECT"] = LANGSMITH_PROJECT
-    #     return True
-    # else:
-    #     print("⚠️  LangSmith API key not found - tracing disabled")
-    #     return False
-
 # Initialize LangSmith
 langsmith_enabled = setup_langsmith()
 # ========== END OF LANGSMITH SETUP ==========
@@ -228,6 +225,7 @@ Answer (short and practical):"""
 def ask_gdpr_question_with_memory(question, show_sources=True):
     """
     Ask a question with conversation memory and return answer with sources
+    Includes LangSmith run_id for feedback tracking
     """
     global qa_chain_memory, memory_instance
     
@@ -236,27 +234,35 @@ def ask_gdpr_question_with_memory(question, show_sources=True):
         return {
             "answer": "❌ API keys not configured. Please set OPENAI_API_KEY and PINECONE_API_KEY in Streamlit secrets.",
             "sources": [],
-            "memory_count": 0
+            "memory_count": 0,
+            "run_id": None
         }
     
     # Initialize chain and memory if not already done
     if qa_chain_memory is None or memory_instance is None:
         qa_chain_memory, memory_instance = create_qa_chain_with_memory()
     
-    # Get answer from QA chain with memory - NOTE: different input format!
-    result = qa_chain_memory.invoke({"question": question})
-
-    # Get answer from QA chain
-    # result = ask_gdpr_question.qa_chain.invoke({"query": question})
+    # Get the current run tree to capture run_id
+    current_run_id = None
+    try:
+        current_trace = run_trees.get_current_run_tree()
+        if current_trace:
+            current_run_id = current_trace.id
+    except Exception as e:
+        print(f"⚠️ Could not get current run tree: {e}")
     
-    # Prepare response - NOTE: key changed from 'result' to 'answer'
+    # Get answer from QA chain with memory
+    result = qa_chain_memory.invoke({"question": question})
+    
+    # Prepare response with run_id
     response = {
         "answer": result.get('answer', '').strip(),
         "sources": [],
-        "memory_count": len(memory_instance.chat_memory.messages) // 2
+        "memory_count": len(memory_instance.chat_memory.messages) // 2,
+        "run_id": current_run_id  # Add run_id to response
     }
     
-    # Extract sources if requested (same logic as before)
+    # Extract sources if requested
     if show_sources and result.get('source_documents'):
         for doc in result['source_documents']:
             source_text = doc.page_content.strip()
@@ -297,8 +303,45 @@ def get_memory_state():
         }
     return {"message_count": 0, "messages": []}
 
-
-
 # Global variables for memory-based QA chain
 qa_chain_memory = None
 memory_instance = None
+
+# ---------------------------
+#  FEEDBACK to LangSmith
+# ---------------------------
+
+def submit_feedback_to_langsmith(run_id, score, comment=None):
+    """
+    Submit feedback to LangSmith for a specific run
+    Returns True if successful, False otherwise
+    """
+    try:
+        # Check if LangSmith is configured
+        if not langsmith_enabled:
+            print("⚠️ LangSmith not configured - feedback not sent")
+            return False
+        
+        # Validate run_id
+        if not run_id:
+            print("❌ No run_id provided for feedback")
+            return False
+        
+        # Get the LangSmith client
+        client = get_langsmith_client()
+        
+        # Submit feedback (this is non-blocking as per LangSmith docs)
+        client.create_feedback(
+            run_id=run_id,
+            key="user_rating",
+            score=score,  # 1 for thumbs up, 0 for thumbs down
+            comment=comment,
+            # trace_id is automatically handled in background
+        )
+        
+        print(f"✅ Feedback submitted for run {run_id}: score={score}")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error submitting feedback to LangSmith: {str(e)}")
+        return False

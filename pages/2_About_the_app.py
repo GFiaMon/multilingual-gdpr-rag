@@ -67,15 +67,6 @@ with col_center:
         - **BITKOM AI & Data Protection Practical Guide 2.0** - Comprehensive AI compliance framework
         """)
 
-# # Data sources section
-# st.subheader("📚 Knowledge Base")
-# st.markdown("""
-# Our assistant is powered by official German guidelines:
-
-# - **ZDH Data Protection Guide for Crafts Businesses** - Practical GDPR implementation for skilled trades
-# - **BITKOM AI & Data Protection Practical Guide 2.0** - Comprehensive AI compliance framework
-# """)
-
 # Add spacing
 st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
@@ -109,28 +100,14 @@ with col_center:
         - **Multilingual Embeddings** - Support for English and German
         """)
 
-
-# # Technology stack
-# st.subheader("🛠️ Built With")
-# st.markdown("""
-# - **LangChain** - AI framework for RAG pipeline
-# - **Pinecone** - Vector database for semantic search  
-# - **OpenAI GPT** - Language model for response generation
-# - **Streamlit** - Web interface deployment
-# - **Multilingual Embeddings** - Support for English and German
-# """)
-
 # Optional: Add some metrics or app info
-with st.expander("📊 App Information"):
-    st.markdown("""
-    **Version**: 1.0
-    """)  
-    # **Framework**: Streamlit + LangChain  
-    # **Vector Database**: Pinecone  
-    # **Language Model**: OpenAI GPT  
-    # **Deployment**: Streamlit Cloud
-    # """)
-
+col_left, col_center, col_right = st.columns([0.5, 3, 0.5])
+with col_center:
+    with st.expander("📊 App Information"):
+        st.markdown("""
+        **Version**: 1.0 \n
+        October 2025
+        """)    
 
 # Footer
 st.divider()
@@ -140,3 +117,17 @@ st.markdown("""
     <p><i>Developed as part of a Data Science learning journey</i></p>
 </div>
 """, unsafe_allow_html=True)
+
+# Footer in main content area
+st.markdown("---")
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.markdown("""
+    <div style='text-align: center;'>
+        <p><strong>👨‍💻 Developed by Guillermo Fiallo Montero</strong></p>
+        <p>
+            <a href="https://www.linkedin.com/in/guillermo-fiallo-montero-734a87132/" target="_blank">LinkedIn</a> • 
+            <a href="https://github.com/GFiaMon" target="_blank">GitHub</a>
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
