@@ -90,15 +90,14 @@ with st.sidebar:
     # First, handle new chat creation before instantiating the selectbox
     chat_names = list(st.session_state.chats.keys())
 
-    # === CHANGE 2: Move selectbox to top ===
-    st.subheader("💬 Chat Sessions")                            # <-- Change
+    # === Selectbox ===
+    st.subheader("💬 Chat Sessions")
     # Ensure current_chat exists in chat_names
     if st.session_state.current_chat not in chat_names:
         st.session_state.current_chat = chat_names[0] if chat_names else "Chat 1"
     
     current_index = chat_names.index(st.session_state.current_chat) if st.session_state.current_chat in chat_names else 0
-    selected_chat = st.selectbox("Select a chat", chat_names, index=current_index, label_visibility="collapsed")      # <-- Change
-    st.session_state.current_chat = selected_chat
+    selected_chat = st.selectbox("Select a chat", chat_names, index=current_index, label_visibility="collapsed")
 
     
     if st.button("New Chat", use_container_width=True):
@@ -177,7 +176,7 @@ with st.sidebar:
     else:
         st.caption("No messages to export")
     
-    # Add your name at the bottom
+    # Name at the bottom
     st.caption("---")
     st.caption("👨‍💻 Developer")
     st.caption("**Guillermo Fiallo Montero**")
@@ -236,34 +235,8 @@ for idx, msg in enumerate(messages):
                 """,
                 height=50,
             )
-            # # === CHANGE 1: Add feedback buttons for assistant messages ===
             
-            
-            # col_fb1, col_fb2, col_fb3 = st.columns([1, 1, 6])
-            # with col_fb1:
-            #     if st.button("👍", key=f"thumbs_up_{idx}", use_container_width=True):
-            #         run_id = msg.get("run_id")
-            #         if run_id:
-            #             success = submit_feedback_to_langsmith(run_id, 1, "User liked this response")
-            #             if success:
-            #                 st.success("✅ Thanks for your feedback!")
-            #             else:
-            #                 st.error("❌ Failed to submit feedback")
-            #         else:
-            #             st.warning("⚠️ No run_id available for feedback")
-            # with col_fb2:
-            #     if st.button("👎", key=f"thumbs_down_{idx}", use_container_width=True):
-            #         run_id = msg.get("run_id")
-            #         if run_id:
-            #             success = submit_feedback_to_langsmith(run_id, 0, "User disliked this response")
-            #             if success:
-            #                 st.success("✅ Thanks for your feedback!")
-            #             else:
-            #                 st.error("❌ Failed to submit feedback")
-            #         else:
-            #             st.warning("⚠️ No run_id available for feedback")
-
-                    # === UPDATED FEEDBACK BUTTONS ===
+                    # === FEEDBACK BUTTONS ===
             col_fb1, col_fb2 = st.columns([1, 1])
             with col_fb1:
                 if st.button("👍", key=f"thumbs_up_{idx}", use_container_width=True):
@@ -311,13 +284,8 @@ if prompt := st.chat_input("Ask about GDPR compliance..."):
         
         # Get response from backend
         
-        # # To use memory version, simply change this line in your app:
-        # # FROM (no memory):
-        # response = ask_gdpr_question(prompt, show_sources=True)
-
         # # TO (with memory):
         response = ask_gdpr_question_with_memory(prompt, show_sources=True)
-
 
         # Display answer
         thinking_placeholder.markdown(response["answer"])
@@ -365,7 +333,7 @@ if prompt := st.chat_input("Ask about GDPR compliance..."):
             height=50,
         )
 
-        # === CHANGE 1: Add feedback buttons for the latest response ===
+        # === feedback buttons for the latest response ===
         col_fb1, col_fb2, col_fb3 = st.columns([1, 1, 6])
         with col_fb1:
             if st.button("👍", key="thumbs_up_latest", use_container_width=True):

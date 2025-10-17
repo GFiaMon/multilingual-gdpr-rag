@@ -20,19 +20,11 @@ from langchain.memory import ConversationBufferWindowMemory
 from langchain.chains import ConversationalRetrievalChain
 
 from langsmith import Client
-from langsmith import traceable
+# from langsmith import traceable
 
-from langchain.callbacks.tracers.langchain import wait_for_all_tracers
+# from langchain.callbacks.tracers.langchain import wait_for_all_tracers
 from langchain.callbacks.manager import collect_runs
 
-
-# Add this instead:
-from langsmith import run_trees
-
-# @st.cache_resource
-# def get_langsmith_client():
-#     """Initialize LangSmith client once"""
-#     return Client()
 
 # # ---------------------------
 # # Configure your API keys (with 'sectrets')
@@ -191,7 +183,7 @@ def create_qa_chain_with_memory():
     )
     
     # Custom prompt template for memory-based conversations
-    prompt_template_mem = """You are a compliance assistant specialized in GDPR and AI data protection for German craft businesses, small businesses, and general knowledge for larger enterprises.
+    prompt_template_mem = """You are a compliance assistant specialized in GDPR and AI data protection for German craft businesses and small businesses.
 Use the following context and conversation history to answer the question. 
 Explain in a clear, practical way. This is not legal advice. If the context does not contain the answer, say so openly and propose a possible alternative question.
 
@@ -211,7 +203,7 @@ Answer (short and practical):"""
         input_variables=["chat_history", "context", "question"]
     )
     
-    # ✅ Use ConversationalRetrievalChain with custom prompt
+    # Use ConversationalRetrievalChain with custom prompt
     qa_chain_mem = ConversationalRetrievalChain.from_llm(
         llm=llm,
         retriever=retriever,
@@ -226,37 +218,6 @@ Answer (short and practical):"""
 # ---------------------------
 #  Ask a question WITH MEMORY and return answer
 # ---------------------------
-
-from langchain.callbacks.manager import collect_runs
-
-def ask_gdpr_question_with_memory(question: str, show_sources: bool = True) -> dict:
-    """Get GDPR response with memory and capture run_id for feedback"""
-    try:
-        with collect_runs() as callback_manager:
-            # Your existing chain invocation
-            result = your_chain.invoke(
-                {"question": question},
-                config={"callbacks": [callback_manager]}
-            )
-            
-            # Capture the run_id from the traced run
-            run_id = None
-            if callback_manager.traced_runs:
-                run_id = str(callback_manager.traced_runs[0].id)
-            
-            return {
-                "answer": result.get("answer", "No answer generated"),
-                "sources": result.get("sources", []),
-                "run_id": run_id  # This is critical for feedback
-            }
-            
-    except Exception as e:
-        return {
-            "answer": f"Error: {str(e)}",
-            "sources": [],
-            "run_id": None
-        }
-
 
 def ask_gdpr_question_with_memory(question, show_sources=True):
     """

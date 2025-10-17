@@ -1,0 +1,178 @@
+GDPR & AI Compliance Assistant - Chat export
+Author: Guillermo Fiallo-Montero
+URL: https://github.com/GFiaMon/multilingual-gdpr-rag
+Exported at: 2025-10-16T09:56:00Z
+Chat: IT Violazione Dati IA
+
+--- Message 1 ---
+Time: 2025-10-16T09:53:14Z
+Role: user
+
+Quali sono le procedure raccomandate per la gestione delle violazioni dei dati nelle piccole imprese?
+
+--- Message 2 ---
+Time: 2025-10-16T09:53:21Z
+Role: assistant
+
+Le piccole imprese dovrebbero implementare procedure interne per gestire le violazioni dei dati, come ad esempio un piano di risposta alle violazioni dei dati che includa la notifica alle autorità di controllo e agli interessati, nonché l'individuazione delle cause e l'attuazione di misure correttive. È importante documentare queste procedure e garantire che siano conformi al GDPR.
+
+Sources:
+[1] ZDH_LEITFADEN_DATENSCHUTZ_BETRIEBE_HANDWERKER.pdf — page 20
+wenn sehr viele Personen von der Datenverarbeitung betroffen sind (z.B.  betriebliche Video-
+überwachung mit Blick auf eine öffentliche Straße). Das gleiche gilt, wenn besonders 
+schutzwürdige Daten (z.B. Gesundheitsdaten, ethnische Herkunft, religiöse Zugehörigkeit) 
+umfangreich verarbeitet werden. Dies ist bei Handwerksbetrieben  gewöhnlich nicht der Fall. 
+Ausnahmen sind in der Regel jedoch Betriebe der Gesundheitshandwerke oder große Be-
+triebe mit vielen Mitarbeitern, die in der Personalabteilung solche Daten umfangreich verar-
+beiten.  
+ 
+Sollte ausnahmsweise ein hohes Risiko bestehe n, ist eine „Datenschutz -
+Folgenabschätzung“ vorzunehmen. Die Anforderungen dieser Folgenabschätzung richten 
+sich nach Art. 35 DSGVO und umfassen folgende Prüfungspunkte:
+
+[2] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 23
+wortliche müssen angemessene technische und organisatorische Maßnahmen 
+implementieren, um die Sicherheit und den Schutz personenbezogener Daten zu 
+gewährleisten. 
+Noch immer konnten Unklarheiten bzgl. des Umfangs und der Form der Rechenschaft 
+nicht in Gänze ausgeräumt werden, sodass einem restriktiven Verständnis, dass diesen 
+Anforderungen nur mittels eines Datenschutzmanagementsystems begegnet werden 
+könne, die Kritik am „One size fits all“-Ansatz und der Angemessenheit für kleinere 
+Unternehmen entgegengesetzt wird.  
+Unabhängig davon, ob interne Mechanismen und Kontrollsysteme (Plan-Do-Check-Act, 
+PDCA) eingerichtet, oder Prozesse mit Personenbezug aktenmäßig dokumentiert 
+werden, ist zu gewährleisten, dass den Aufsichtsbehörden Nachweise vorgelegt 
+werden können.
+
+[3] ZDH_LEITFADEN_DATENSCHUTZ_BETRIEBE_HANDWERKER.pdf — page 16
+Drohen bei Verstößen Sanktionen? 
+ 
+Verstöße gegen die datenschutzrechtlichen Informationspflichten können gemäß Art. 83 Abs. 
+5 DSGVO Strafen in Höhe von bis zu 20 Mio. EUR oder vier Prozent des Weltjahresumsat-
+zes ausgesprochen werden.
+
+
+--- Message 3 ---
+Time: 2025-10-16T09:53:41Z
+Role: user
+
+Come si applicano queste procedure quando una violazione coinvolge dati elaborati da sistemi di IA?
+
+--- Message 4 ---
+Time: 2025-10-16T09:53:46Z
+Role: assistant
+
+Quando una violazione coinvolge dati elaborati da sistemi di intelligenza artificiale, è importante analizzare quali dati personali sono stati utilizzati e se ci sono rischi per i diritti e le libertà delle persone coinvolte. Se si ritiene che vi sia un alto rischio, è necessario notificare immediatamente la violazione alle autorità competenti e agli interessati, come richiesto dall'Art. 34 del GDPR. È fondamentale documentare tutte le azioni intraprese e garantire la conformità alle normative sulla protezione dei dati.
+
+Sources:
+[1] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 48
+oder Modellen erschwert zudem die Risikoeinschätzung im Einzelfall. Die 
+Feststellung, ob überhaupt eine Verletzung der Sicherheit und damit eine 
+meldepflichtige Datenschutzverletzung vorliegt, kann somit in der Praxis 
+herausfordernd sein. Oft sehen sich Verantwortliche mit intransparenten und wenig 
+verständlichen Informationen der KI-Hersteller konfrontiert. Wichtig dabei ist, im 
+Einzelfall zu untersuchen, welche personenbezogenen Daten konkret z. B. für ein 
+Training von Systemen verwendet werden. Diese Analyse sollte bestenfalls schon im 
+Rahmen der Dokumentation für das Verzeichnis von Verarbeitungstätigkeiten i. S. v. 
+Art. 30 DS-GVO geschehen – bevor es zu einem Vorfall kommt. 
+ Verantwortlichkeit: Der Aspekt der datenschutzrechtlichen Verantwortlichkeit kann
+
+[2] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 47
+Vorgängen ohne menschliche Kontrolle bzw. Interaktion mit direkten rechtlichen 
+Auswirkungen auf betroffene Personen z. B. im Rahmen von automatisierten 
+Entscheidungsfindungen oder KI-gestütztem Scoring  
+ Beispiel 1: Anwendung für Bonitätsrating/Kreditvergabe 
+ Beispiel 2: Ein Bewerbungs-Tracking-System, das auf KI basiert, könnte aufgrund 
+von Voreingenommenheit in den Trainingsdaten Bewerberinnen und Bewerber 
+bestimmter ethnischer Gruppen benachteiligen, indem es sie fälschlicherweise 
+ausschließt. 
+Hinweis: Kommt der Verantwortliche bei der Analyse zu dem Ergebnis, dass die DSV 
+voraussichtlich ein hohes Risiko für Rechte und Freiheiten der Betroffenen zur Folge 
+hat, muss er diese gemäß Art. 34 Abs.1DS-GVO unverzüglich von der Verletzung 
+benachrichtigen.30
+
+[3] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 48
+Praxisleitfaden KI & Datenschutz 
+48 
+Herausforderungen 
+Bei der Beurteilung von Datenschutzvorfällen in Verbindung mit KI gibt es spezifische 
+Herausforderungen, welche den nachfolgenden Aspekten zugeordnet werden können: 
+ Feststellung einer Datenschutzverletzung: Zu Transparenzanforderungen in 
+Verbindung mit KI (Siehe die Ausführungen im Abschnitt Transparenz- und 
+Informationspflichten auf Seite 36.) Aufgrund der technischen Komplexität von KI 
+leidet die Nachvollziehbarkeit ihrer Funktionsweise. Verantwortlichen fehlt häufig 
+das nötige technische Verständnis. Dieses ist jedoch wichtig, um beurteilen zu 
+können, ob KI ordnungsgemäß funktioniert. Die hohe Komplexität von KI-Systemen 
+oder Modellen erschwert zudem die Risikoeinschätzung im Einzelfall. Die
+
+
+--- Message 5 ---
+Time: 2025-10-16T09:54:34Z
+Role: user
+
+Quali strumenti di documentazione pratica raccomandano entrambe le linee guida per dimostrare la conformità?
+
+--- Message 6 ---
+Time: 2025-10-16T09:54:37Z
+Role: assistant
+
+Per dimostrare la conformità, si consiglia di documentare le informazioni relative alle informazioni obbligatorie, ai contratti con i fornitori, alle valutazioni dei rischi, alle analisi di impatto sulla protezione dei dati e alle misure tecniche e organizzative adottate. È importante tenere aggiornata questa documentazione e assicurarsi che sia facilmente accessibile in caso di ispezioni o richieste delle autorità di controllo.
+
+Sources:
+[1] ZDH_LEITFADEN_DATENSCHUTZ_BETRIEBE_HANDWERKER.pdf — page 62
+Optional Im Hinblick auf die vielfältigen Nachweispflichten, denen das Unternehmen 
+im Datenschutz unterliegt, kann es sinnvoll sein, weitere Aspekte zur Ver-
+arbeitungstätigkeit zu dokumentieren. Diese sind nur intern zu verwenden. 
+Zu diesen zusätzlichen Dokumentationen, die sinnvollerweise hier erfol-
+gen, gehören z. B.  
+• Angaben zur Zusammenstellung der Informationspflichten (insbes. 
+Art. 13,14 DSGVO) 
+• Verträge mit Dienstleistern (Art. 28 DSGVO) 
+• Vereinbarungen zur gemeinsamen Verantwortung (Art. 26 DSG-
+VO) 
+• Eine Bewertung der Risiken der Verarbeitungstätigkeit für die 
+Rechte und Freiheiten natürlicher Personen 
+• durchgeführte Datenschutzfolgeabschätzungen zur Verarbeitungs-
+tätigkeit oder einzelnen Verarbeitungsschritten (Art. 35 DSGVO)
+
+[2] ZDH_LEITFADEN_DATENSCHUTZ_BETRIEBE_HANDWERKER.pdf — page 54
+Optional Im Hinblick auf die vielfältigen Nachweispflichten, denen das Unternehmen 
+im Datenschutz unterliegt, kann es sinnvoll sein, weitere Aspekte zur Ver-
+arbeitungstätigkeit zu dokumentieren. Diese sind nur intern zu verwenden. 
+Zu diesen zusätzlichen Dokumentationen, die sinnvollerweise hier erfol-
+gen, gehören z. B.  
+• Angaben zur Zusammenstellung der Informationspflichten (insbes. 
+Art. 13,14 DSGVO) 
+• Verträge mit Dienstleistern (Art. 28 DSGVO) 
+• Vereinbarungen zur gemeinsamen Verantwortung (Art. 26 DSG-
+VO) 
+• Eine Bewertung der Risiken der Verarbeitungstätigkeit für die 
+Rechte und Freiheiten natürlicher Personen 
+• durchgeführte Datenschutzfolgeabschätzungen zur Verarbeitungs-
+tätigkeit oder einzelnen Verarbeitungsschritten (Art. 35 DSGVO)
+
+[3] ZDH_LEITFADEN_DATENSCHUTZ_BETRIEBE_HANDWERKER.pdf — page 59
+--------- 
+  
+(Siehe betriebsinternes IT-Sicherheitskonzept) 
+ 
+10.2 Konkrete Beschreibung der technischen und organisatorischen Maß-
+nahmen, Art. 30 Abs. 1 g) i.V.m. Art. 32 Abs. 1 DSGVO 
+ 
+--------- 
+  
+(Siehe betriebsinternes IT-Sicherheitskonzept) 
+ 
+ 
+ 
+ 
+----- Optionale Angaben ---- 
+ 
+Weitere Dokumentationen zur Verarbeitungstätigkeit 
+ 
+ 
+---------------------------- 
+ 
+ 
+ 
+----- Ende Optionale Angaben----

@@ -1,0 +1,169 @@
+GDPR & AI Compliance Assistant - Chat export
+Author: Guillermo Fiallo-Montero
+URL: https://github.com/GFiaMon/multilingual-gdpr-rag
+Exported at: 2025-10-17T08:47:23Z
+Chat: chatbot-wrong-information
+
+--- Message 1 ---
+Time: 2025-10-17T08:37:34Z
+Role: user
+
+What happens if my AI customer service bot gives legally incorrect advice about data protection rights?
+
+--- Message 2 ---
+Time: 2025-10-17T08:37:41Z
+Role: assistant
+
+If your AI customer service bot gives legally incorrect advice about data protection rights, it could lead to potential legal consequences for your business. It is important to ensure that the AI model is trained in compliance with GDPR regulations to avoid such situations. Regular monitoring and updating of the AI model's training data are essential to maintain legal accuracy in advice provided by the bot.
+
+Sources:
+[1] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 34
+Rechtsgrundlage erforderlich ist. Zudem müssen Betroffenenrechte gewahrt und die 
+Betroffenen ggf. informiert werden. 
+Zentrale Aussagen des EDSA 
+ Der EDSA stellt klar, dass die Nutzung eines Modells, das nicht datenschutzkonform 
+trainiert wurde, nicht automatisch verboten ist. Eine Einzelfallprüfung ist 
+erforderlich. 
+ Unternehmen, die ein vortrainiertes KI-Modell von Dritten übernehmen, sind 
+datenschutzrechtlich verantwortlich. Sie müssen sicherstellen, dass das Modell 
+rechtmäßig trainiert wurde, sich aktiv informieren („due diligence“) und ggf. 
+Maßnahmen zur Schadensbegrenzung treffen. 
+ In der Konsequenz bedeutet dies, dass die Behauptung des KI-Modell-Anbieters, das 
+KI-Modell sei rechtmäßig, nicht ausreicht. Wer ein Modell nutzt, muss selbst in der
+
+[2] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 33
+Praxisleitfaden KI & Datenschutz 
+33 
+Die rechtliche Einschätzung des Europäischen 
+Datenschutzausschusses 
+Der EDSA entwickelt ein auf Szenarien basierendes Prüfmodell, das als Orientie-
+rungshilfe für die Praxis dient. Die Kernaussage lautet, dass die Rechtswidrigkeit des 
+Trainings die spätere Nutzung des Modells unzulässig machen kann, wobei dies nicht 
+zwingend der Fall ist. 
+Im Einzelnen unterscheidet der EDSA zwischen folgenden Konstellationen: 
+Szenario 1: Weiterverwendung des KI-Modells durch denselben 
+Verantwortlichen 
+Im ersten Szenario wird ein KI-Modell, das unter Verstoß gegen die DS-GVO trainiert 
+wurde, vom ursprünglichen Verantwortlichen selbst weiterverwendet. Wenn 
+personenbezogene Daten im KI-Modell verbleiben und der Verantwortliche das Modell
+
+[3] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 32
+Maßnahmen sind zu ergreifen, wenn personenbezogene Daten rechtswidrig für das KI-
+Training verwendet wurden, etwa weil es an einer geeigneten Rechtsgrundlage fehlte? 
+Welche Folgen hat eine unzulässige Verarbeitung im Training für die spätere Nutzung 
+des Modells? Sind derartige Modelle überhaupt noch rechtskonform einsetzbar? 
+Antworten auf diese Fragen gibt die „Stellungnahme 28/2024“ des EDSA.22 Diese 
+Stellungnahme bietet eine erste europäische Orientierung zur datenschutzrechtlichen 
+Beurteilung von KI-Modellen, insbesondere zur Folgeproblematik unrechtmäßiger 
+Trainingsdaten. 
+  
+ 
+ 
+22 EDSA, Stellungnahme des EDSA zu KI-Modellen: DSGVO – Prinzipien unterstützen verantwortungsvolle KI, 28/2024 vom 18. 12.
+
+
+--- Message 3 ---
+Time: 2025-10-17T08:42:07Z
+Role: user
+
+What about if the model is a commercially available one (like gpt-3.5-turbo) and I am using a RAG system with documents collected from public available websites?
+
+--- Message 4 ---
+Time: 2025-10-17T08:42:13Z
+Role: assistant
+
+When using a commercially available AI model like gpt-3.5-turbo and a RAG system with documents from publicly available websites, you can ensure legal accuracy by thoroughly reviewing and verifying the training data to ensure compliance with GDPR regulations. Regularly monitor and update the AI model's training data to maintain legal accuracy in the advice provided by your customer service bot. Conducting regular audits and assessments of the AI model's performance can also help identify and address any potential legal risks.
+
+Sources:
+[1] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 7
+generieren – z. B. zur Beantwortung häufig gestellter Fragen im Kundenservice. 
+Solche Systeme fallen unter den Anwendungsbereich der KI-Verordnung, da sie auf 
+einem vortrainierten Modell basieren und eine gewisse Entscheidungsautonomie 
+aufweisen. Je nach Einsatzbereich – etwa im Gesundheits-, Finanz- oder 
+Bildungswesen – können sie als Hochrisiko-KI-Systeme im Sinne des Art.6 KI-VO 
+eingestuft werden, sofern ein erhebliches Risiko für Grundrechte, Sicherheit oder 
+Gesundheit besteht. 
+ 
+3. GPAI-Modelle (Generative KI mit allgemeinem Verwendungszweck) 
+Hier geht es um KI-Modelle mit allgemeinem Verwendungszweck, wie z. B. 
+ChatGPT von OpenAI, die mit riesigen Datenmengen trainiert werden. GPAI-
+Modelle werden im Art.3 Nr. 63 der KI-VO definiert und unterliegen besonderen
+
+[2] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 17
+aus, wenn die genannten Risiken bestehen. Die Beweislast, dass ein Modell anonym ist, 
+liegt nach Ansicht des EDSA beim Verantwortlichen. Dieser muss dies gegenüber der 
+Aufsichtsbehörde umfassend dokumentieren und nachweisen können (EDSA Opinion 
+28/2024, Rn. 34, 56 ff.). Gelingt dieser Nachweis nicht, unterliegt das Modell bzw. 
+dessen Training/Nutzung weiterhin der DS-GVO. 
+Texte, Bilder oder andere Daten, die von einem KI-System generiert werden, können 
+ebenfalls personenbezogene Daten sein. Dies ist unproblematisch der Fall, wenn der 
+Output sich auf eine identifizierte Person bezieht (z. B. KI generiert einen Text über 
+Max Mustermann). Personenbezug kann aber auch vorliegen, wenn der Output die  
+(Re-)Identifizierung einer Person ermöglicht, z. B. durch die Reproduktion von
+
+[3] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 34
+Rechtsgrundlage erforderlich ist. Zudem müssen Betroffenenrechte gewahrt und die 
+Betroffenen ggf. informiert werden. 
+Zentrale Aussagen des EDSA 
+ Der EDSA stellt klar, dass die Nutzung eines Modells, das nicht datenschutzkonform 
+trainiert wurde, nicht automatisch verboten ist. Eine Einzelfallprüfung ist 
+erforderlich. 
+ Unternehmen, die ein vortrainiertes KI-Modell von Dritten übernehmen, sind 
+datenschutzrechtlich verantwortlich. Sie müssen sicherstellen, dass das Modell 
+rechtmäßig trainiert wurde, sich aktiv informieren („due diligence“) und ggf. 
+Maßnahmen zur Schadensbegrenzung treffen. 
+ In der Konsequenz bedeutet dies, dass die Behauptung des KI-Modell-Anbieters, das 
+KI-Modell sei rechtmäßig, nicht ausreicht. Wer ein Modell nutzt, muss selbst in der
+
+
+--- Message 5 ---
+Time: 2025-10-17T08:44:00Z
+Role: user
+
+how do I verify the training data from a model I did not train?
+
+--- Message 6 ---
+Time: 2025-10-17T08:44:04Z
+Role: assistant
+
+If you are using a model that you did not train, you can verify the training data by conducting a thorough review of the data sources and documentation provided by the model's developers. Additionally, you can consider implementing data lineage systems, classification systems for personal data, structured data catalogs, named entity recognition, and automated pseudonymization processes to ensure compliance with GDPR regulations. Regular audits and assessments of the model's performance can also help identify any potential issues with the training data.
+
+Sources:
+[1] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 23
+eine Verhältnismäßigkeitsprüfung durchzuführen und die „Zweck-Mittel-Relation“ 
+zwischen dem Sammeln der Daten und Effizienz des Trainings zu bestimmen. 
+Insbesondere das Mittel der (irreversiblen) Anonymisierung der Trainingssätze stellt 
+eine Möglichkeit dar, datenschutzkonform vorzugehen. 
+Richtigkeit, Art. 5 Abs.1lit.d DS-GVO 
+Aufgrund der möglichen Konsequenzen von Falschinformationen für Betroffene 
+verlangt die DS-GVO grundsätzlich, dass nur sachlich richtige personenbezogene Daten 
+verarbeitet werden. Unrichtige personenbezogene Daten sind unverzüglich zu löschen 
+oder zu berichtigen.  
+Es kommt jedoch regelmäßig vor, dass ein Large Language Model Halluzinationen 
+erzeugt. Es handelt sich hierbei um unrichtige Informationen, die zunächst plausibel
+
+[2] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 38
+bereits trainierte LLM und vom LLM verwendete Informationen nicht betreffen – sie 
+wirken sich erst auf zukünftige Versionen des Modells aus, die mit den bereinigten 
+Daten trainiert werden; dazu Ziffer 2. 
+KI-Betreiber sollten angemessene und wirksame technische, organisatorische und 
+rechtliche Maßnahmen zur Unterstützung bei der Erfüllung von Betroffenenanfragen 
+zu Trainingsdaten evaluieren und implementieren (lassen) wie Data-Lineage-Systeme 
+zur Nachverfolgung von Datenquellen, Klassifizierungssysteme für personenbezogene 
+Daten und strukturierte Datenkataloge, Named Entity Recognition zur Identifikation 
+personenbezogener Daten und automatisierte Pseudonymisierungsverfahren. Diese 
+sind je nach Situation auch mit den Anbietern der Trainingsdaten und/oder dem KI-
+
+[3] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 32
+Maßnahmen sind zu ergreifen, wenn personenbezogene Daten rechtswidrig für das KI-
+Training verwendet wurden, etwa weil es an einer geeigneten Rechtsgrundlage fehlte? 
+Welche Folgen hat eine unzulässige Verarbeitung im Training für die spätere Nutzung 
+des Modells? Sind derartige Modelle überhaupt noch rechtskonform einsetzbar? 
+Antworten auf diese Fragen gibt die „Stellungnahme 28/2024“ des EDSA.22 Diese 
+Stellungnahme bietet eine erste europäische Orientierung zur datenschutzrechtlichen 
+Beurteilung von KI-Modellen, insbesondere zur Folgeproblematik unrechtmäßiger 
+Trainingsdaten. 
+  
+ 
+ 
+22 EDSA, Stellungnahme des EDSA zu KI-Modellen: DSGVO – Prinzipien unterstützen verantwortungsvolle KI, 28/2024 vom 18. 12.

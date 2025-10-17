@@ -1,0 +1,50 @@
+I principi di base della protezione dei dati per le piccole imprese artigianali includono la necessità di ottenere il consenso dei clienti per la raccolta e l'uso dei loro dati, garantire la sicurezza e la protezione dei dati personali, documentare le procedure interne per gestire le violazioni dei dati e assicurarsi di essere conformi al GDPR. È importante anche tenere aggiornata la documentazione e assicurarsi che sia facilmente accessibile in caso di ispezioni o richieste delle autorità di controllo.
+
+Sources:
+[1] ZDH_LEITFADEN_DATENSCHUTZ_BETRIEBE_HANDWERKER.pdf — page 10
+3. Formelle Pflichten von Betrieben – Ein Überblick  
+ 
+Welchen Zweck verfolgen die Pflichten?  
+ 
+Das Datenschutzrecht räumt Personen, deren Daten von Betrieben genutzt werden, zahlrei-
+che Rechte ein. Mithilfe dieser Rechte soll erreicht werden, dass diese Betroffenen Einfluss 
+auf den Umgang und die Verbreitung ihrer Daten haben.  
+ 
+Für Betriebe, die Dat en verarbeiten, bestehen kehrseitig gewisse Anforderungen an die Da-
+tennutzung. Wer Daten z.B. seiner Kunden und Geschäftspartner nutzen möchte, muss die-
+se überwiegend formalen Anforderungen erfüllen. Die Pflichten von Betrieben und die Rech-
+te von Betroffen en sind in den Artikeln 12 bis 22 der Datenschutz -Grundverordnung    
+(DSGVO) geregelt. Die Vorschriften werden durch die §§ 32 bis 37 des Bundesdatenschutz-
+
+[2] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 23
+wortliche müssen angemessene technische und organisatorische Maßnahmen 
+implementieren, um die Sicherheit und den Schutz personenbezogener Daten zu 
+gewährleisten. 
+Noch immer konnten Unklarheiten bzgl. des Umfangs und der Form der Rechenschaft 
+nicht in Gänze ausgeräumt werden, sodass einem restriktiven Verständnis, dass diesen 
+Anforderungen nur mittels eines Datenschutzmanagementsystems begegnet werden 
+könne, die Kritik am „One size fits all“-Ansatz und der Angemessenheit für kleinere 
+Unternehmen entgegengesetzt wird.  
+Unabhängig davon, ob interne Mechanismen und Kontrollsysteme (Plan-Do-Check-Act, 
+PDCA) eingerichtet, oder Prozesse mit Personenbezug aktenmäßig dokumentiert 
+werden, ist zu gewährleisten, dass den Aufsichtsbehörden Nachweise vorgelegt 
+werden können.
+
+[3] ZDH_LEITFADEN_DATENSCHUTZ_BETRIEBE_HANDWERKER.pdf — page 39
+13. Datenschutz bei Betrieben der Gesundheitshandwerke 
+ 
+ 
+Warum gelten für Gesundheitshandwerke zum Teil besondere Vorschriften? 
+ 
+Informationen über die Gesundheit einer Person gelten – wie nach bisherigem Recht auch – 
+als besonders sensible Daten und unterstehen einem strengen gesetzlichen Schutz. Da Be-
+triebe der Gesundheitshandwerke Gesundheitsdaten ihrer Kunden erheben, speichern und 
+nutzen (z.B. Dioptrinzahl, Hörfähigkeit, etc.), müssen sie die besonderen Vorschriften beach-
+ten. 
+ 
+ 
+Dürfen Gesundheitshandwerker die G esundheitsdaten ihrer Kunden nur mit 
+deren Einwilligung erheben und nutzen? 
+ 
+Nein. Zwar ordnet die Datenschutz -Grund-verordnung an, dass für die Erhebung und Vera r-
+beitung von Gesundheitsdaten grundsätzlich eine Einwilligung erfo rderlich ist. Das Bundes-

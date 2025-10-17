@@ -1,0 +1,31 @@
+As the data controller, if a participant accidentally shares confidential health data during a recorded online training session, you are required to notify the affected individuals without undue delay according to Article 34(1) of the GDPR. Additionally, you must document this breach in your records and may need to conduct a data protection impact assessment if the data use was deemed risky. Failure to comply with these obligations could result in fines of up to €10 million or 2% of your annual global turnover.
+
+Sources:
+[1] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 38
+Verarbeitung personenbezogener Daten beim Training/Finetuning von KI-Modellen 
+und Systemen eintritt, sodass die nach DS-GVO erforderliche Betroffenheit 
+unterschritten wird (im Lichte des EuG-Urteils vom 26.4.2023 (Az: T-557/20). 
+Hat der KI-Betreiber die Trainingsdaten aber selbst erstellt oder direkt von eingekauft, 
+kann und muss er Auskunft darüber geben, ob konkrete Daten einer betroffenen 
+Person in den Trainingsdaten enthalten waren. In diesem Fall kann er auch Löschungen 
+oder Korrekturen umsetzen oder umsetzen lassen, indem die entsprechenden Daten im 
+ursprünglichen Datensatz entfernt oder korrigiert werden.  
+Wichtig ist jedoch, die Betroffenen darüber aufzuklären, dass diese Maßnahmen das 
+bereits trainierte LLM und vom LLM verwendete Informationen nicht betreffen – sie
+
+[2] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 47
+hat, muss er diese gemäß Art. 34 Abs.1DS-GVO unverzüglich von der Verletzung 
+benachrichtigen.30  
+  
+ 
+ 
+29 Bitkom e.V, Datenschutzverletzung und Meldung im Kontext des »Hafnium Hacks«, Leitfaden, 2017abrufbar unter: 
+Datenschutzverletzung und Meldung im Kontext des "Hafnium Hacks" (zuletzt abgerufen am 23.05.2025). 
+30 Zu Modalitäten und Inhalt einer Benachrichtigung s. Art. 34 Abs. 1 und 2 DS-GVODS-GVO, zu Ausnahmen s. Art. 34 Abs 3 DS-
+GVO. Details s. Bitkom-LF aaO, vgl. Fn. 15.
+
+[3] bitkom-leitfaden-kuenstliche-intelligenz-und-datenschutz-auflage-2.pdf — page 39
+mäßiger Aufwand) beantwortet werden. Nach Art. 11 Abs.2 DS-GVO entfällt die 
+Auskunftsverpflichtung, wenn der Verantwortliche den Betroffenen nicht identifizieren 
+kann. Allerdings sollte (soweit möglich) eine Auskunft bzgl. der Trainingsdaten 
+erfolgen (siehe oben).
