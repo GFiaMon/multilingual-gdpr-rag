@@ -6,7 +6,9 @@ import time
 
 # 1. Import necessary libraries
 
-from pinecone import Pinecone, ServerlessSpec
+# from pinecone import Pinecone, ServerlessSpec
+from pinecone import Pinecone
+
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_pinecone import PineconeVectorStore
 from langchain.chains import RetrievalQA
@@ -20,13 +22,17 @@ from langchain.chains import ConversationalRetrievalChain
 from langsmith import Client
 from langsmith import traceable
 
+from langchain.callbacks.tracers.langchain import wait_for_all_tracers
+from langchain.callbacks.manager import collect_runs
+
+
 # Add this instead:
 from langsmith import run_trees
 
-@st.cache_resource
-def get_langsmith_client():
-    """Initialize LangSmith client once"""
-    return Client()
+# @st.cache_resource
+# def get_langsmith_client():
+#     """Initialize LangSmith client once"""
+#     return Client()
 
 # # ---------------------------
 # # Configure your API keys (with 'sectrets')
@@ -72,7 +78,6 @@ def setup_langsmith():
             # Set the EXACT environment variables LangSmith expects
             os.environ["LANGSMITH_TRACING"] = st.secrets.get("LANGSMITH_TRACING", "true")
             os.environ["LANGSMITH_API_KEY"] = st.secrets["LANGSMITH_API_KEY"]
-            # os.environ["LANGSMITH_ENDPOINT"] = st.secrets.get("LANGSMITH_ENDPOINT", "https://eu.api.smith.langchain.com")
             os.environ["LANGSMITH_PROJECT"] = st.secrets.get("LANGSMITH_PROJECT", "GDPR-Compliance-Assistant")
             
             return True
@@ -222,6 +227,37 @@ Answer (short and practical):"""
 #  Ask a question WITH MEMORY and return answer
 # ---------------------------
 
+from langchain.callbacks.manager import collect_runs
+
+def ask_gdpr_question_with_memory(question: str, show_sources: bool = True) -> dict:
+    """Get GDPR response with memory and capture run_id for feedback"""
+    try:
+        with collect_runs() as callback_manager:
+            # Your existing chain invocation
+            result = your_chain.invoke(
+                {"question": question},
+                config={"callbacks": [callback_manager]}
+            )
+            
+            # Capture the run_id from the traced run
+            run_id = None
+            if callback_manager.traced_runs:
+                run_id = str(callback_manager.traced_runs[0].id)
+            
+            return {
+                "answer": result.get("answer", "No answer generated"),
+                "sources": result.get("sources", []),
+                "run_id": run_id  # This is critical for feedback
+            }
+            
+    except Exception as e:
+        return {
+            "answer": f"Error: {str(e)}",
+            "sources": [],
+            "run_id": None
+        }
+
+
 def ask_gdpr_question_with_memory(question, show_sources=True):
     """
     Ask a question with conversation memory and return answer with sources
@@ -242,19 +278,30 @@ def ask_gdpr_question_with_memory(question, show_sources=True):
     if qa_chain_memory is None or memory_instance is None:
         qa_chain_memory, memory_instance = create_qa_chain_with_memory()
     
-    # Get the current run tree to capture run_id
+    # Use collect_runs to properly capture run_id
     current_run_id = None
     try:
-        current_trace = run_trees.get_current_run_tree()
-        if current_trace:
-            current_run_id = current_trace.id
+        with collect_runs() as callback_manager:
+            # Get answer from QA chain with memory
+            result = qa_chain_memory.invoke(
+                {"question": question},
+                config={"callbacks": [callback_manager]}
+            )
+            
+            # Capture run_id from the traced run
+            if callback_manager.traced_runs:
+                current_run_id = str(callback_manager.traced_runs[0].id)
+                
     except Exception as e:
-        print(f"⚠️ Could not get current run tree: {e}")
+        print(f"Error in QA chain invocation: {e}")
+        return {
+            "answer": f"❌ Error processing your question: {str(e)}",
+            "sources": [],
+            "memory_count": 0,
+            "run_id": None
+        }
     
-    # Get answer from QA chain with memory
-    result = qa_chain_memory.invoke({"question": question})
-    
-    # Prepare response with run_id
+    # Prepare response with run_id - PRESERVING YOUR EXACT SOURCE FORMAT
     response = {
         "answer": result.get('answer', '').strip(),
         "sources": [],
@@ -262,7 +309,7 @@ def ask_gdpr_question_with_memory(question, show_sources=True):
         "run_id": current_run_id  # Add run_id to response
     }
     
-    # Extract sources if requested
+    # Extract sources if requested - EXACTLY AS YOU HAD IT
     if show_sources and result.get('source_documents'):
         for doc in result['source_documents']:
             source_text = doc.page_content.strip()
@@ -311,37 +358,27 @@ memory_instance = None
 #  FEEDBACK to LangSmith
 # ---------------------------
 
-def submit_feedback_to_langsmith(run_id, score, comment=None):
-    """
-    Submit feedback to LangSmith for a specific run
-    Returns True if successful, False otherwise
-    """
+def submit_feedback_to_langsmith(run_id: str, score: int, comment: str = "") -> bool:
+    """Submit feedback to LangSmith with proper error handling"""
     try:
-        # Check if LangSmith is configured
-        if not langsmith_enabled:
-            print("⚠️ LangSmith not configured - feedback not sent")
-            return False
-        
-        # Validate run_id
         if not run_id:
             print("❌ No run_id provided for feedback")
             return False
+            
+        client = Client()
         
-        # Get the LangSmith client
-        client = get_langsmith_client()
-        
-        # Submit feedback (this is non-blocking as per LangSmith docs)
+        # Submit feedback
         client.create_feedback(
             run_id=run_id,
-            key="user_rating",
+            key="user_rating", 
             score=score,  # 1 for thumbs up, 0 for thumbs down
             comment=comment,
-            # trace_id is automatically handled in background
+            value=str(score)
         )
         
-        print(f"✅ Feedback submitted for run {run_id}: score={score}")
+        print(f"✅ Feedback submitted for run_id: {run_id}, score: {score}")
         return True
         
     except Exception as e:
-        print(f"❌ Error submitting feedback to LangSmith: {str(e)}")
+        print(f"❌ LangSmith feedback error: {str(e)}")
         return False

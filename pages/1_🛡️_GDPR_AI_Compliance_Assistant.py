@@ -92,13 +92,19 @@ with st.sidebar:
 
     # === CHANGE 2: Move selectbox to top ===
     st.subheader("💬 Chat Sessions")                            # <-- Change
-    selected_chat = st.selectbox("Select a chat", chat_names, key="current_chat", label_visibility="collapsed")      # <-- Change   
+    # Ensure current_chat exists in chat_names
+    if st.session_state.current_chat not in chat_names:
+        st.session_state.current_chat = chat_names[0] if chat_names else "Chat 1"
+    
+    current_index = chat_names.index(st.session_state.current_chat) if st.session_state.current_chat in chat_names else 0
+    selected_chat = st.selectbox("Select a chat", chat_names, index=current_index, label_visibility="collapsed")      # <-- Change
+    st.session_state.current_chat = selected_chat
 
     
     if st.button("New Chat", use_container_width=True):
         new_chat_name = f"Chat {len(chat_names) + 1}"
         st.session_state.chats[new_chat_name] = []
-        st.session_state.current_chat = new_chat_name
+        # Don't modify current_chat directly - let the selectbox handle it
         st.rerun()
     
     # Optional toggle to display chat count
@@ -123,7 +129,7 @@ with st.sidebar:
             st.warning("A chat with this name already exists. Choose a different name.")
         else:
             st.session_state.chats[new_name] = st.session_state.chats.pop(old_name)
-            st.session_state.current_chat = new_name
+            # Don't modify current_chat directly - let the selectbox handle it
             st.rerun()
     
     # Delete current chat with safeguard; do this before selectbox
@@ -134,8 +140,7 @@ with st.sidebar:
         else:
             # Remove current chat and select another existing one
             st.session_state.chats.pop(current, None)
-            remaining_names = list(st.session_state.chats.keys())
-            st.session_state.current_chat = remaining_names[0]
+            # Don't modify current_chat directly - let the selectbox handle it
             st.rerun()
 
     # Memory controls
@@ -231,33 +236,50 @@ for idx, msg in enumerate(messages):
                 """,
                 height=50,
             )
+            # # === CHANGE 1: Add feedback buttons for assistant messages ===
+            
+            
+            # col_fb1, col_fb2, col_fb3 = st.columns([1, 1, 6])
+            # with col_fb1:
+            #     if st.button("👍", key=f"thumbs_up_{idx}", use_container_width=True):
+            #         run_id = msg.get("run_id")
+            #         if run_id:
+            #             success = submit_feedback_to_langsmith(run_id, 1, "User liked this response")
+            #             if success:
+            #                 st.success("✅ Thanks for your feedback!")
+            #             else:
+            #                 st.error("❌ Failed to submit feedback")
+            #         else:
+            #             st.warning("⚠️ No run_id available for feedback")
+            # with col_fb2:
+            #     if st.button("👎", key=f"thumbs_down_{idx}", use_container_width=True):
+            #         run_id = msg.get("run_id")
+            #         if run_id:
+            #             success = submit_feedback_to_langsmith(run_id, 0, "User disliked this response")
+            #             if success:
+            #                 st.success("✅ Thanks for your feedback!")
+            #             else:
+            #                 st.error("❌ Failed to submit feedback")
+            #         else:
+            #             st.warning("⚠️ No run_id available for feedback")
 
-            # === CHANGE 1: Add feedback buttons for assistant messages ===
-            col_fb1, col_fb2, col_fb3 = st.columns([1, 1, 6])
+                    # === UPDATED FEEDBACK BUTTONS ===
+            col_fb1, col_fb2 = st.columns([1, 1])
             with col_fb1:
                 if st.button("👍", key=f"thumbs_up_{idx}", use_container_width=True):
                     run_id = msg.get("run_id")
                     if run_id:
-                        success = submit_feedback_to_langsmith(run_id, 1, "User liked this response")
+                        success = submit_feedback_to_langsmith(run_id, 1, "thumbs_up")
                         if success:
-                            st.success("✅ Thanks for your feedback!")
+                            st.success("✅ Feedback submitted!")
+                            # Prevent multiple submissions
+                            st.session_state.feedback_given[f"thumbs_up_{idx}"] = True
                         else:
                             st.error("❌ Failed to submit feedback")
                     else:
-                        st.warning("⚠️ No run_id available for feedback")
-            with col_fb2:
-                if st.button("👎", key=f"thumbs_down_{idx}", use_container_width=True):
-                    run_id = msg.get("run_id")
-                    if run_id:
-                        success = submit_feedback_to_langsmith(run_id, 0, "User disliked this response")
-                        if success:
-                            st.success("✅ Thanks for your feedback!")
-                        else:
-                            st.error("❌ Failed to submit feedback")
-                    else:
-                        st.warning("⚠️ No run_id available for feedback")
+                        st.warning("⚠️ No run_id available")
 
-
+            
 
         # Show sources for assistant messages
         if msg["role"] == "assistant" and msg.get("sources"):
